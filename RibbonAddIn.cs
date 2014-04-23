@@ -8,7 +8,7 @@ using Office = Microsoft.Office.Core;
 
 namespace ALPRibbon
 {
-    public partial class ThisAddIn
+    public partial class RibbonAddIn
     {
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
