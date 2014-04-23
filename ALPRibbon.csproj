@@ -151,9 +151,18 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="ALPRibbon.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ALPRibbon.Designer.cs">
+      <DependentUpon>ALPRibbon.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
+    <EmbeddedResource Include="ALPRibbon.resx">
+      <DependentUpon>ALPRibbon.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
