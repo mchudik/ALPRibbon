@@ -175,6 +175,9 @@
     <EmbeddedResource Include="ALPAboutBox.resx">
       <DependentUpon>ALPAboutBox.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ALPPaneLogIn.resx">
+      <DependentUpon>ALPPaneLogIn.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ALPRibbon.resx">
       <DependentUpon>ALPRibbon.cs</DependentUpon>
     </EmbeddedResource>
@@ -210,6 +213,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PlaceHolder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\echo360_logo_blue.png" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

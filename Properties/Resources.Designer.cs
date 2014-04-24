@@ -63,6 +63,16 @@ namespace ALPRibbon.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap echo360_logo_blue {
+            get {
+                object obj = ResourceManager.GetObject("echo360_logo_blue", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap PlaceHolder {
             get {
                 object obj = ResourceManager.GetObject("PlaceHolder", resourceCulture);
