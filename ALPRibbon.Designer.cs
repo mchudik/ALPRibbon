@@ -36,16 +36,16 @@
         {
             this.ALPRibbonTab = this.Factory.CreateRibbonTab();
             this.Account = this.Factory.CreateRibbonGroup();
-            this.SignIn = this.Factory.CreateRibbonButton();
             this.Content = this.Factory.CreateRibbonGroup();
+            this.AddInteractivity = this.Factory.CreateRibbonGroup();
+            this.Sources = this.Factory.CreateRibbonGroup();
+            this.SignIn = this.Factory.CreateRibbonToggleButton();
             this.Upload = this.Factory.CreateRibbonButton();
             this.Publish = this.Factory.CreateRibbonButton();
             this.Update = this.Factory.CreateRibbonButton();
-            this.AddInteractivity = this.Factory.CreateRibbonGroup();
             this.MultipleChoice = this.Factory.CreateRibbonButton();
             this.ImageQuiz = this.Factory.CreateRibbonButton();
             this.FreeResponse = this.Factory.CreateRibbonButton();
-            this.Sources = this.Factory.CreateRibbonGroup();
             this.Analytics = this.Factory.CreateRibbonButton();
             this.Help = this.Factory.CreateRibbonButton();
             this.ALPRibbonTab.SuspendLayout();
@@ -69,17 +69,6 @@
             this.Account.Label = "Account";
             this.Account.Name = "Account";
             // 
-            // SignIn
-            // 
-            this.SignIn.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.SignIn.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
-            this.SignIn.Label = "Sign In";
-            this.SignIn.Name = "SignIn";
-            this.SignIn.ScreenTip = "Sign In User";
-            this.SignIn.ShowImage = true;
-            this.SignIn.SuperTip = "User needs to sign in first to use the rest of the tools in the ribbon, will brin" +
-    "g up window in PowerPoint.";
-            // 
             // Content
             // 
             this.Content.Items.Add(this.Upload);
@@ -87,6 +76,33 @@
             this.Content.Items.Add(this.Update);
             this.Content.Label = "Content";
             this.Content.Name = "Content";
+            // 
+            // AddInteractivity
+            // 
+            this.AddInteractivity.Items.Add(this.MultipleChoice);
+            this.AddInteractivity.Items.Add(this.ImageQuiz);
+            this.AddInteractivity.Items.Add(this.FreeResponse);
+            this.AddInteractivity.Label = "Add Interactivity";
+            this.AddInteractivity.Name = "AddInteractivity";
+            // 
+            // Sources
+            // 
+            this.Sources.Items.Add(this.Analytics);
+            this.Sources.Items.Add(this.Help);
+            this.Sources.Label = "Sources";
+            this.Sources.Name = "Sources";
+            // 
+            // SignIn
+            // 
+            this.SignIn.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
+            this.SignIn.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.SignIn.Label = "Sign In";
+            this.SignIn.Name = "SignIn";
+            this.SignIn.ScreenTip = "User Sign In";
+            this.SignIn.ShowImage = true;
+            this.SignIn.SuperTip = "User needs to sign in first to use the rest of the tools in the ribbon, will brin" +
+    "g up window in PowerPoint.";
+            this.SignIn.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.SignIn_Click);
             // 
             // Upload
             // 
@@ -121,14 +137,6 @@
             this.Update.SuperTip = "After instructor uploads or publishes their presentation to the web, they can cli" +
     "ck on “update” after they add slides, make changes, etc.";
             // 
-            // AddInteractivity
-            // 
-            this.AddInteractivity.Items.Add(this.MultipleChoice);
-            this.AddInteractivity.Items.Add(this.ImageQuiz);
-            this.AddInteractivity.Items.Add(this.FreeResponse);
-            this.AddInteractivity.Label = "Add Interactivity";
-            this.AddInteractivity.Name = "AddInteractivity";
-            // 
             // MultipleChoice
             // 
             this.MultipleChoice.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
@@ -162,13 +170,6 @@
             this.FreeResponse.SuperTip = "When an instructor decides to create a free response question, a new slide is cre" +
     "ated that allows them to ask a question that requires their students to respond " +
     "freely.";
-            // 
-            // Sources
-            // 
-            this.Sources.Items.Add(this.Analytics);
-            this.Sources.Items.Add(this.Help);
-            this.Sources.Label = "Sources";
-            this.Sources.Name = "Sources";
             // 
             // Analytics
             // 
@@ -210,7 +211,6 @@
 
         internal Microsoft.Office.Tools.Ribbon.RibbonTab ALPRibbonTab;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup Account;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton SignIn;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup Content;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup AddInteractivity;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup Sources;
@@ -222,6 +222,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonButton FreeResponse;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton Analytics;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton Help;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton SignIn;
     }
 
     partial class ThisRibbonCollection

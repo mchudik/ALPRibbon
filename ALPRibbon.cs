@@ -18,5 +18,10 @@ namespace ALPRibbon
             ALPAboutBox dlg = new ALPAboutBox();
             dlg.ShowDialog();
         }
+
+        private void SignIn_Click(object sender, RibbonControlEventArgs e)
+        {
+            Globals.RibbonAddIn.ALPLogInTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+        }
     }
 }

@@ -10,12 +10,34 @@ namespace ALPRibbon
 {
     public partial class RibbonAddIn
     {
+        // Properties
+        public Microsoft.Office.Tools.CustomTaskPane ALPLogInTaskPane
+        {
+            get
+            {
+                return ALPPaneLogInTaskPane;
+            }
+        }
+
+        // Methods
+        private ALPPaneLogIn ALPPaneLogInControl;
+        private Microsoft.Office.Tools.CustomTaskPane ALPPaneLogInTaskPane;
+
+        // Event Handlers
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            ALPPaneLogInControl = new ALPPaneLogIn();
+            ALPPaneLogInTaskPane = this.CustomTaskPanes.Add(ALPPaneLogInControl, "User Sign In");
+            ALPPaneLogInTaskPane.VisibleChanged += new EventHandler(ALPPaneLogInTaskPane_VisibleChanged);
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
         {
+        }
+
+        private void ALPPaneLogInTaskPane_VisibleChanged(object sender, System.EventArgs e)
+        {
+            Globals.Ribbons.ALPRibbon.SignIn.Checked = ALPPaneLogInTaskPane.Visible;
         }
 
         #region VSTO generated code

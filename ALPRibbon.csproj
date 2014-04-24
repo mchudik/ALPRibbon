@@ -157,6 +157,12 @@
     <Compile Include="ALPAboutBox.Designer.cs">
       <DependentUpon>ALPAboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="ALPPaneLogIn.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ALPPaneLogIn.Designer.cs">
+      <DependentUpon>ALPPaneLogIn.cs</DependentUpon>
+    </Compile>
     <Compile Include="ALPRibbon.cs">
       <SubType>Component</SubType>
     </Compile>
