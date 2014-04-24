@@ -34,7 +34,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.tab1 = this.Factory.CreateRibbonTab();
+            this.ALPRibbonTab = this.Factory.CreateRibbonTab();
             this.Account = this.Factory.CreateRibbonGroup();
             this.SignIn = this.Factory.CreateRibbonButton();
             this.Content = this.Factory.CreateRibbonGroup();
@@ -48,20 +48,20 @@
             this.Sources = this.Factory.CreateRibbonGroup();
             this.Analytics = this.Factory.CreateRibbonButton();
             this.Help = this.Factory.CreateRibbonButton();
-            this.tab1.SuspendLayout();
+            this.ALPRibbonTab.SuspendLayout();
             this.Account.SuspendLayout();
             this.Content.SuspendLayout();
             this.AddInteractivity.SuspendLayout();
             this.Sources.SuspendLayout();
             // 
-            // tab1
+            // ALPRibbonTab
             // 
-            this.tab1.Groups.Add(this.Account);
-            this.tab1.Groups.Add(this.Content);
-            this.tab1.Groups.Add(this.AddInteractivity);
-            this.tab1.Groups.Add(this.Sources);
-            this.tab1.Label = "LectureTools ALP";
-            this.tab1.Name = "tab1";
+            this.ALPRibbonTab.Groups.Add(this.Account);
+            this.ALPRibbonTab.Groups.Add(this.Content);
+            this.ALPRibbonTab.Groups.Add(this.AddInteractivity);
+            this.ALPRibbonTab.Groups.Add(this.Sources);
+            this.ALPRibbonTab.Label = "LectureTools ALP";
+            this.ALPRibbonTab.Name = "ALPRibbonTab";
             // 
             // Account
             // 
@@ -191,10 +191,10 @@
             // 
             this.Name = "ALPRibbon";
             this.RibbonType = "Microsoft.PowerPoint.Presentation";
-            this.Tabs.Add(this.tab1);
+            this.Tabs.Add(this.ALPRibbonTab);
             this.Load += new Microsoft.Office.Tools.Ribbon.RibbonUIEventHandler(this.ALPRibbon_Load);
-            this.tab1.ResumeLayout(false);
-            this.tab1.PerformLayout();
+            this.ALPRibbonTab.ResumeLayout(false);
+            this.ALPRibbonTab.PerformLayout();
             this.Account.ResumeLayout(false);
             this.Account.PerformLayout();
             this.Content.ResumeLayout(false);
@@ -208,7 +208,7 @@
 
         #endregion
 
-        internal Microsoft.Office.Tools.Ribbon.RibbonTab tab1;
+        internal Microsoft.Office.Tools.Ribbon.RibbonTab ALPRibbonTab;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup Account;
         internal Microsoft.Office.Tools.Ribbon.RibbonButton SignIn;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup Content;
