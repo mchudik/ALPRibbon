@@ -40,13 +40,13 @@
             this.AddInteractivity = this.Factory.CreateRibbonGroup();
             this.Sources = this.Factory.CreateRibbonGroup();
             this.SignInButton = this.Factory.CreateRibbonToggleButton();
-            this.UploadButton = this.Factory.CreateRibbonButton();
-            this.PublishButton = this.Factory.CreateRibbonButton();
-            this.UpdateButton = this.Factory.CreateRibbonButton();
-            this.MultipleChoiceButton = this.Factory.CreateRibbonButton();
-            this.ImageQuizButton = this.Factory.CreateRibbonButton();
-            this.FreeResponseButton = this.Factory.CreateRibbonButton();
-            this.AnalyticsButton = this.Factory.CreateRibbonButton();
+            this.UploadButton = this.Factory.CreateRibbonToggleButton();
+            this.PublishButton = this.Factory.CreateRibbonToggleButton();
+            this.UpdateButton = this.Factory.CreateRibbonToggleButton();
+            this.MultipleChoiceButton = this.Factory.CreateRibbonToggleButton();
+            this.ImageQuizButton = this.Factory.CreateRibbonToggleButton();
+            this.FreeResponseButton = this.Factory.CreateRibbonToggleButton();
+            this.AnalyticsButton = this.Factory.CreateRibbonToggleButton();
             this.HelpButton = this.Factory.CreateRibbonButton();
             this.ALPRibbonTab.SuspendLayout();
             this.Account.SuspendLayout();
@@ -214,15 +214,15 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup Content;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup AddInteractivity;
         internal Microsoft.Office.Tools.Ribbon.RibbonGroup Sources;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton UploadButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton PublishButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton UpdateButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton MultipleChoiceButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton ImageQuizButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton FreeResponseButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton AnalyticsButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton HelpButton;
         internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton SignInButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton UploadButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton PublishButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton UpdateButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton MultipleChoiceButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton ImageQuizButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton FreeResponseButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton AnalyticsButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonButton HelpButton;
     }
 
     partial class ThisRibbonCollection
