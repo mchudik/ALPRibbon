@@ -12,5 +12,11 @@ namespace ALPRibbon
         {
 
         }
+
+        private void Help_Click(object sender, RibbonControlEventArgs e)
+        {
+            ALPAboutBox dlg = new ALPAboutBox();
+            dlg.ShowDialog();
+        }
     }
 }
