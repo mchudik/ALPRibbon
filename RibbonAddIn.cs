@@ -37,7 +37,7 @@ namespace ALPRibbon
 
         private void ALPPaneLogInTaskPane_VisibleChanged(object sender, System.EventArgs e)
         {
-            Globals.Ribbons.ALPRibbon.SignIn.Checked = ALPPaneLogInTaskPane.Visible;
+            Globals.Ribbons.ALPRibbon.SignInButton.Checked = ALPPaneLogInTaskPane.Visible;
         }
 
         #region VSTO generated code
