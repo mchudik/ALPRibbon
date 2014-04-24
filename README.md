@@ -1,7 +1,7 @@
-Test
+ALPRibbon
 ====
 
-Test Repository
+ALPRibbon Repository
 This is MS Office custom Add-In application for PowerPoint. It adds custom Ribbon bar to the top of the PowerPoint program with "LectureTools ALP" custom tab. Then it interacts with the document of PowerPoint presentation via PowerPoint Custom Panes.
 
 BUILD REQUIREMENTS:
