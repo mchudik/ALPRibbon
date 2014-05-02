@@ -36,16 +36,16 @@
         {
             this.ALPRibbonTab = this.Factory.CreateRibbonTab();
             this.Account = this.Factory.CreateRibbonGroup();
-            this.Content = this.Factory.CreateRibbonGroup();
-            this.AddInteractivity = this.Factory.CreateRibbonGroup();
-            this.Sources = this.Factory.CreateRibbonGroup();
             this.SignInButton = this.Factory.CreateRibbonToggleButton();
+            this.Content = this.Factory.CreateRibbonGroup();
             this.UploadButton = this.Factory.CreateRibbonToggleButton();
             this.PublishButton = this.Factory.CreateRibbonToggleButton();
             this.UpdateButton = this.Factory.CreateRibbonToggleButton();
+            this.AddInteractivity = this.Factory.CreateRibbonGroup();
             this.MultipleChoiceButton = this.Factory.CreateRibbonToggleButton();
             this.ImageQuizButton = this.Factory.CreateRibbonToggleButton();
             this.FreeResponseButton = this.Factory.CreateRibbonToggleButton();
+            this.Sources = this.Factory.CreateRibbonGroup();
             this.AnalyticsButton = this.Factory.CreateRibbonToggleButton();
             this.HelpButton = this.Factory.CreateRibbonButton();
             this.ALPRibbonTab.SuspendLayout();
@@ -69,29 +69,6 @@
             this.Account.Label = "Account";
             this.Account.Name = "Account";
             // 
-            // Content
-            // 
-            this.Content.Items.Add(this.UploadButton);
-            this.Content.Items.Add(this.PublishButton);
-            this.Content.Items.Add(this.UpdateButton);
-            this.Content.Label = "Content";
-            this.Content.Name = "Content";
-            // 
-            // AddInteractivity
-            // 
-            this.AddInteractivity.Items.Add(this.MultipleChoiceButton);
-            this.AddInteractivity.Items.Add(this.ImageQuizButton);
-            this.AddInteractivity.Items.Add(this.FreeResponseButton);
-            this.AddInteractivity.Label = "Add Interactivity";
-            this.AddInteractivity.Name = "AddInteractivity";
-            // 
-            // Sources
-            // 
-            this.Sources.Items.Add(this.AnalyticsButton);
-            this.Sources.Items.Add(this.HelpButton);
-            this.Sources.Label = "Sources";
-            this.Sources.Name = "Sources";
-            // 
             // SignInButton
             // 
             this.SignInButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
@@ -104,6 +81,14 @@
     "g up window in PowerPoint.";
             this.SignInButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.SignIn_Click);
             // 
+            // Content
+            // 
+            this.Content.Items.Add(this.UploadButton);
+            this.Content.Items.Add(this.PublishButton);
+            this.Content.Items.Add(this.UpdateButton);
+            this.Content.Label = "Content";
+            this.Content.Name = "Content";
+            // 
             // UploadButton
             // 
             this.UploadButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
@@ -114,6 +99,7 @@
             this.UploadButton.ShowImage = true;
             this.UploadButton.SuperTip = "Allows user to upload presentation to LT, can select course, class, and can overw" +
     "rite classes that already have a presentation.";
+            this.UploadButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.UploadButton_Click);
             // 
             // PublishButton
             // 
@@ -136,6 +122,14 @@
             this.UpdateButton.ShowImage = true;
             this.UpdateButton.SuperTip = "After instructor uploads or publishes their presentation to the web, they can cli" +
     "ck on “update” after they add slides, make changes, etc.";
+            // 
+            // AddInteractivity
+            // 
+            this.AddInteractivity.Items.Add(this.MultipleChoiceButton);
+            this.AddInteractivity.Items.Add(this.ImageQuizButton);
+            this.AddInteractivity.Items.Add(this.FreeResponseButton);
+            this.AddInteractivity.Label = "Add Interactivity";
+            this.AddInteractivity.Name = "AddInteractivity";
             // 
             // MultipleChoiceButton
             // 
@@ -170,6 +164,13 @@
             this.FreeResponseButton.SuperTip = "When an instructor decides to create a free response question, a new slide is cre" +
     "ated that allows them to ask a question that requires their students to respond " +
     "freely.";
+            // 
+            // Sources
+            // 
+            this.Sources.Items.Add(this.AnalyticsButton);
+            this.Sources.Items.Add(this.HelpButton);
+            this.Sources.Label = "Sources";
+            this.Sources.Name = "Sources";
             // 
             // AnalyticsButton
             // 

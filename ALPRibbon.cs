@@ -23,5 +23,10 @@ namespace ALPRibbon
         {
             Globals.RibbonAddIn.ALPLogInTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
         }
+
+        private void UploadButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            Globals.RibbonAddIn.ALPUploadTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+        }
     }
 }
