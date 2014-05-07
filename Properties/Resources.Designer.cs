@@ -61,6 +61,15 @@ namespace ALPRibbon.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Critical Error.
+        /// </summary>
+        internal static string Critical_Error {
+            get {
+                return ResourceManager.GetString("Critical_Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap echo360_logo_blue {
@@ -77,6 +86,24 @@ namespace ALPRibbon.Properties {
             get {
                 object obj = ResourceManager.GetObject("PlaceHolder", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publish.
+        /// </summary>
+        internal static string Publish_Title {
+            get {
+                return ResourceManager.GetString("Publish_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All PowerPoint Slides Exported to Desktop!.
+        /// </summary>
+        internal static string Slides_Exported {
+            get {
+                return ResourceManager.GetString("Slides_Exported", resourceCulture);
             }
         }
     }

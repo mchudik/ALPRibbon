@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml.Linq;
@@ -11,6 +12,11 @@ namespace ALPRibbon
 {
     public partial class RibbonAddIn
     {
+        // Working Directories
+        public static string WORKING_DIR;
+        public const string EXPORT_DIR = "export";
+        public static string DESKTOP_DIR = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
         // Properties
         public Microsoft.Office.Tools.CustomTaskPane ALPLogInTaskPane
         {
@@ -34,8 +40,11 @@ namespace ALPRibbon
         private Microsoft.Office.Tools.CustomTaskPane ALPPaneUploadTaskPane;
 
         // Event Handlers
-        private void ThisAddIn_Startup(object sender, System.EventArgs e)
+        private void RibbonAddIn_Startup(object sender, System.EventArgs e)
         {
+            // generate working directory
+            WORKING_DIR = ALPGeneralUtils.GetTemporaryDirectory();
+
             ALPPaneLogInControl = new ALPPaneLogIn();
             ALPPaneLogInTaskPane = this.CustomTaskPanes.Add(ALPPaneLogInControl, "User Sign In");
             ALPPaneLogInTaskPane.VisibleChanged += new EventHandler(ALPPaneLogInTaskPane_VisibleChanged);
@@ -57,8 +66,9 @@ namespace ALPRibbon
 
         }
 
-        private void ThisAddIn_Shutdown(object sender, System.EventArgs e)
+        private void RibbonAddIn_Shutdown(object sender, System.EventArgs e)
         {
+            Directory.Delete(RibbonAddIn.WORKING_DIR, true);
         }
 
         private void ALPPaneLogInTaskPane_VisibleChanged(object sender, System.EventArgs e)
@@ -92,8 +102,8 @@ namespace ALPRibbon
         /// </summary>
         private void InternalStartup()
         {
-            this.Startup += new System.EventHandler(ThisAddIn_Startup);
-            this.Shutdown += new System.EventHandler(ThisAddIn_Shutdown);
+            this.Startup += new System.EventHandler(RibbonAddIn_Startup);
+            this.Shutdown += new System.EventHandler(RibbonAddIn_Shutdown);
         }
         
         #endregion

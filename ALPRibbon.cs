@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
+using ALPRibbon.Properties;
 using Microsoft.Office.Tools.Ribbon;
 
 namespace ALPRibbon
@@ -27,6 +29,12 @@ namespace ALPRibbon
         private void UploadButton_Click(object sender, RibbonControlEventArgs e)
         {
             Globals.RibbonAddIn.ALPUploadTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+        }
+
+        private void PublishButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            ALPPowerpointUtils.ExportLectureSlides();
+            MessageBox.Show(Resources.Slides_Exported, Resources.Publish_Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }

@@ -111,6 +111,7 @@
             this.PublishButton.ShowImage = true;
             this.PublishButton.SuperTip = "Once the instructor is satisfied with their presentation, they can publish it to " +
     "the web so their students can view it.";
+            this.PublishButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.PublishButton_Click);
             // 
             // UpdateButton
             // 
