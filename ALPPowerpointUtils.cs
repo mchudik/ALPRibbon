@@ -95,12 +95,11 @@ namespace ALPRibbon
                 //Write the XML delcaration. 
                 xmlFile.WriteStartDocument();
 
-                //Write an element (this one is the root).
-                xmlFile.WriteStartElement("lecture");
-
                 //Use indentation for readability.
                 xmlFile.Formatting = Formatting.Indented;
-                xmlFile.Indentation = 4;
+
+                //Write an element (this one is the root).
+                xmlFile.WriteStartElement("lecture");
 
                 //Write the title element.
                 xmlFile.WriteStartElement("title");
