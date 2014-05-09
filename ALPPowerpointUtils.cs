@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO;
+using System.Xml;
 using System.Windows.Forms;
 using ALPRibbon.Properties;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
@@ -89,83 +90,119 @@ namespace ALPRibbon
 
         public static void CreateLectureIndex(PowerPoint.Presentation oPres, ProgressBar myProgress = null)
         {
-            StreamWriter xmlFile = new StreamWriter(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\lecture.xml", true);
-            xmlFile.Write("<?xml version=\"1.0\" encoding=\"UTF-8\" ?><lecture><title>" + oPres.Name + "</title><slides>");
-
-            StreamWriter jsonFile = new StreamWriter(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\lecture.js", true);
-            jsonFile.Write("var presentationData = '{\"lecture\": { \"title\": \"" + oPres.Name + "\", \"slides\": { \"slide\": [");
-
-            if (myProgress != null)
+            using (XmlTextWriter xmlFile = new XmlTextWriter(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\lecture.xml", System.Text.Encoding.UTF8))
             {
-                myProgress.Maximum = oPres.Slides.Count;
-            }
+                //Write the XML delcaration. 
+                xmlFile.WriteStartDocument();
 
-            for (int i = 1; i < oPres.Slides.Count + 1; i++)
-            {
-                if (myProgress != null)
+                //Write an element (this one is the root).
+                xmlFile.WriteStartElement("lecture");
+
+                //Use indentation for readability.
+                xmlFile.Formatting = Formatting.Indented;
+                xmlFile.Indentation = 4;
+
+                //Write the title element.
+                xmlFile.WriteStartElement("title");
+                xmlFile.WriteString(oPres.Name);
+                xmlFile.WriteEndElement();  //title
+
+                //Write the slides element.
+                xmlFile.WriteStartElement("slides");
+
+                using (StreamWriter jsonFile = new StreamWriter(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\lecture.js", true))
                 {
-                    myProgress.Value = i;
-                }
+                    jsonFile.Write("var presentationData = '{\"lecture\": { \"title\": \"" + oPres.Name + "\", \"slides\": { \"slide\": [");
 
-                PowerPoint.Slide currentSlide = oPres.Slides[i];
-                
-                xmlFile.Write("<slide id='" + i + "'>");
-
-                if (i == 1)
-                {
-                    jsonFile.Write("{ \"-id\": \"" + i + "\", \"content\": [");
-                }
-                else
-                {
-                    jsonFile.Write(",{ \"-id\": \"" + i + "\", \"content\": [");
-                }
-
-                currentSlide.Export(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\slide_" + i + ".png", "PNG", 800, 600);
-                currentSlide.Export(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\thumb_slide_" + i + ".png", "PNG", 240, 180);
-
-                Boolean resetShapes = true;
-                foreach (PowerPoint.Shape shape in currentSlide.Shapes)
-                {
-                    if (shape.HasTextFrame == TRUE)
+                    if (myProgress != null)
                     {
-                        var textFrame = shape.TextFrame;
-                        var textRange = textFrame.TextRange;
-                        var paragraphs = textRange.Paragraphs(-1, -1);
+                        myProgress.Maximum = oPres.Slides.Count;
+                    }
 
-                        foreach (PowerPoint.TextRange paragraph in paragraphs)
+                    for (int i = 1; i < oPres.Slides.Count + 1; i++)
+                    {
+                        if (myProgress != null)
                         {
-                            xmlFile.Write("<content indent_level='" + paragraph.IndentLevel + "' bullet='" + paragraph.ParagraphFormat.Bullet.Type + "' text='" + paragraph.Text.Trim() + "' />" );
-                            if (resetShapes)
+                            myProgress.Value = i;
+                        }
+
+                        PowerPoint.Slide currentSlide = oPres.Slides[i];
+
+                        xmlFile.WriteStartElement("slide");
+                        xmlFile.WriteAttributeString("id", "" + i + "");
+
+                        if (i == 1)
+                        {
+                            jsonFile.Write("{ \"-id\": \"" + i + "\", \"content\": [");
+                        }
+                        else
+                        {
+                            jsonFile.Write(",{ \"-id\": \"" + i + "\", \"content\": [");
+                        }
+
+                        currentSlide.Export(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\slide_" + i + ".png", "PNG", 800, 600);
+                        currentSlide.Export(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\thumb_slide_" + i + ".png", "PNG", 240, 180);
+
+                        Boolean resetShapes = true;
+                        foreach (PowerPoint.Shape shape in currentSlide.Shapes)
+                        {
+                            if (shape.HasTextFrame == TRUE)
                             {
-                                jsonFile.Write("{ \"-indent_level\": \"" + paragraph.IndentLevel + "\", \"-bullet\": \"" + paragraph.ParagraphFormat.Bullet.Type + "\", \"#text\": \"" + paragraph.Text.Trim() + "\" }");
-                                resetShapes = false;
-                            }
-                            else
-                            {
-                                jsonFile.Write(",{ \"-indent_level\": \"" + paragraph.IndentLevel + "\", \"-bullet\": \"" + paragraph.ParagraphFormat.Bullet.Type + "\", \"#text\": \"" + paragraph.Text.Trim() + "\" }");
+                                var textFrame = shape.TextFrame;
+                                var textRange = textFrame.TextRange;
+                                var paragraphs = textRange.Paragraphs(-1, -1);
+
+                                foreach (PowerPoint.TextRange paragraph in paragraphs)
+                                {
+                                    xmlFile.WriteStartElement("content");
+                                    xmlFile.WriteAttributeString("indent_level", "" + paragraph.IndentLevel + "");
+                                    xmlFile.WriteAttributeString("bullet", "" + paragraph.ParagraphFormat.Bullet.Type + "");
+                                    xmlFile.WriteAttributeString("text", "" + paragraph.Text.Trim() + "");
+                                    xmlFile.WriteEndElement();  //content
+
+                                    if (resetShapes)
+                                    {
+                                        jsonFile.Write("{ \"-indent_level\": \"" + paragraph.IndentLevel + "\", \"-bullet\": \"" + paragraph.ParagraphFormat.Bullet.Type + "\", \"#text\": \"" + paragraph.Text.Trim() + "\" }");
+                                        resetShapes = false;
+                                    }
+                                    else
+                                    {
+                                        jsonFile.Write(",{ \"-indent_level\": \"" + paragraph.IndentLevel + "\", \"-bullet\": \"" + paragraph.ParagraphFormat.Bullet.Type + "\", \"#text\": \"" + paragraph.Text.Trim() + "\" }");
+                                    }
+                                }
                             }
                         }
-                    }
-                }
 
-                if( currentSlide.Hyperlinks.Count > 0 ){
-                    xmlFile.Write("<hyperlinks>");
-                    foreach (PowerPoint.Hyperlink link in currentSlide.Hyperlinks)
-                    {
-                        xmlFile.Write("<hyperlink url='" + link.Address + "' email-subject='" + link.EmailSubject + "' sub-address='" + link.SubAddress + "' display-text='" + link.TextToDisplay + "' />");
-                    }
-                    xmlFile.Write("</hyperlinks>");
-                }
-                 
+                        if (currentSlide.Hyperlinks.Count > 0)
+                        {
+                            xmlFile.WriteStartElement("hyperlinks");
+                            foreach (PowerPoint.Hyperlink link in currentSlide.Hyperlinks)
+                            {
+                                xmlFile.WriteStartElement("hyperlink");
+                                xmlFile.WriteAttributeString("display-text", "" + link.TextToDisplay + "");
+                                xmlFile.WriteAttributeString("sub-address", "" + link.SubAddress + "");
+                                xmlFile.WriteAttributeString("email-subject", "" + link.EmailSubject + "");
+                                xmlFile.WriteAttributeString("url", "" + link.Address + "");
+                                xmlFile.WriteEndElement();  //hyperlink
+                            }
+                            xmlFile.WriteEndElement();  //hyperlinks
+                        }
 
-                xmlFile.Write("</slide>");
-                jsonFile.Write("] }");
+                        xmlFile.WriteEndElement();  //slide
+                        jsonFile.Write("] }");
+                    }
+                    // Close elements
+                    xmlFile.WriteEndElement();  //slides
+                    xmlFile.WriteEndElement();  //lecture
+
+                    // Write the XML to file and close the xmlFile.
+                    xmlFile.Flush();
+                    xmlFile.Close();
+
+                    jsonFile.Write("] } } }';");
+                    jsonFile.Close();
+                }
             }
-            xmlFile.Write("</slides></lecture>");
-            xmlFile.Close();
-
-            jsonFile.Write("] } } }';");
-            jsonFile.Close();
         }
     }
 }
