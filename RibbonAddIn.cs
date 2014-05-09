@@ -17,7 +17,17 @@ namespace ALPRibbon
         public const string EXPORT_DIR = "export";
         public static string DESKTOP_DIR = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
+        // Presentation variables
+        private static int _currentSlideNum = 0;
+
         // Properties
+        public static int ALPCurrentSlide
+        {
+            get
+            {
+                return _currentSlideNum;
+            }
+        }
         public Microsoft.Office.Tools.CustomTaskPane ALPLogInTaskPane
         {
             get
@@ -45,30 +55,45 @@ namespace ALPRibbon
             // generate working directory
             WORKING_DIR = ALPGeneralUtils.GetTemporaryDirectory();
 
+            // hook into powerpoint events
+            this.Application.SlideSelectionChanged +=
+                new PowerPoint.EApplication_SlideSelectionChangedEventHandler(Application_SlideSelectionChanged);
+
             ALPPaneLogInControl = new ALPPaneLogIn();
             ALPPaneLogInTaskPane = this.CustomTaskPanes.Add(ALPPaneLogInControl, "User Sign In");
             ALPPaneLogInTaskPane.VisibleChanged += new EventHandler(ALPPaneLogInTaskPane_VisibleChanged);
+            // Set default for floating view    
             ALPPaneLogInTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
             ALPPaneLogInTaskPane.Width = 275;
             ALPPaneLogInTaskPane.Height = 550;
+            // Set default for docked view    
             ALPPaneLogInTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
+            ALPPaneLogInTaskPane.Width = 275;
+            // Set docking restrictions
             ALPPaneLogInTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
             ALPPaneUploadControl = new ALPPaneUpload();
             ALPPaneUploadTaskPane = this.CustomTaskPanes.Add(ALPPaneUploadControl, "Upload Presentation");
             ALPPaneUploadTaskPane.VisibleChanged += new EventHandler(ALPPaneUploadTaskPane_VisibleChanged);
-            ALPPaneUploadTaskPane.DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneUploadTaskPane.Width = 450;
-            ALPPaneUploadTaskPane.DockPosition = Office.MsoCTPDockPosition.msoCTPDockPositionFloating;
+            // Set default for floating view    
+            ALPPaneUploadTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
             ALPPaneUploadTaskPane.Width = 450;
             ALPPaneUploadTaskPane.Height = 600;
+            // Set default for docked view    
+            ALPPaneUploadTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
+            ALPPaneUploadTaskPane.Width = 450;
+            // Set docking restrictions
             ALPPaneUploadTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
-
         }
 
         private void RibbonAddIn_Shutdown(object sender, System.EventArgs e)
         {
             Directory.Delete(RibbonAddIn.WORKING_DIR, true);
+        }
+
+        private void Application_SlideSelectionChanged(PowerPoint.SlideRange SldRange)
+        {
+            _currentSlideNum = SldRange.SlideIndex;
         }
 
         private void ALPPaneLogInTaskPane_VisibleChanged(object sender, System.EventArgs e)
@@ -79,13 +104,14 @@ namespace ALPRibbon
         private void ALPPaneUploadTaskPane_VisibleChanged(object sender, System.EventArgs e)
         {
             Globals.Ribbons.ALPRibbon.UploadButton.Checked = ALPPaneUploadTaskPane.Visible;
+ /*
             if (ALPPaneUploadTaskPane.Visible == true)
             {
                 var window = FindWindowW("MsoCommandBar", ALPPaneUploadTaskPane.Title); //MLHIDE
                 if (window == null) return;
                 MoveWindow(window, 600, 200, ALPPaneUploadTaskPane.Width, ALPPaneUploadTaskPane.Height, true);
             }
-        }
+*/        }
 
         [DllImport("user32.dll", EntryPoint = "FindWindowW")]
         public static extern System.IntPtr FindWindowW([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpClassName, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpWindowName);

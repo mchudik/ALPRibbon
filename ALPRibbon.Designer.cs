@@ -142,6 +142,7 @@
             this.MultipleChoiceButton.ShowImage = true;
             this.MultipleChoiceButton.SuperTip = "When an instructor decides to create add a mutliple choice question, a new slide " +
     "is created that allows them to insert a question and the corresponding answers.";
+            this.MultipleChoiceButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.MultipleChoiceButton_Click);
             // 
             // ImageQuizButton
             // 

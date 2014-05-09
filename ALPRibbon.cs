@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
 using ALPRibbon.Properties;
 using Microsoft.Office.Tools.Ribbon;
+using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
 namespace ALPRibbon
 {
@@ -35,6 +37,20 @@ namespace ALPRibbon
         {
             ALPPowerpointUtils.ExportLectureSlides();
             MessageBox.Show(Resources.Slides_Exported, Resources.Publish_Title, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void MultipleChoiceButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
+            PowerPoint.Presentation oPres = oApp.ActivePresentation;
+            PowerPoint.PpSlideLayout oLayout = PowerPoint.PpSlideLayout.ppLayoutBlank;
+            PowerPoint.View oView = oApp.ActiveWindow.View;
+
+            int totalSlideCount = oPres.Slides.Count;
+            int currentSlide = RibbonAddIn.ALPCurrentSlide;
+
+            oPres.Slides.Add(currentSlide + 1, oLayout);
+            oView.GotoSlide(currentSlide + 1);
         }
     }
 }
