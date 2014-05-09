@@ -42,12 +42,22 @@ namespace ALPRibbon
                 return ALPPaneUploadTaskPane;
             }
         }
+        public Microsoft.Office.Tools.CustomTaskPane ALPMultipleChoiceTaskPane
+        {
+            get
+            {
+                return ALPPaneMultipleChoiceTaskPane;
+            }
+        }
+
 
         // Custom Pane Controls
         private ALPPaneLogIn ALPPaneLogInControl;
         private Microsoft.Office.Tools.CustomTaskPane ALPPaneLogInTaskPane;
         private ALPPaneUpload ALPPaneUploadControl;
         private Microsoft.Office.Tools.CustomTaskPane ALPPaneUploadTaskPane;
+        private ALPPaneMultipleChoice ALPPaneMultipleChoiceControl;
+        private Microsoft.Office.Tools.CustomTaskPane ALPPaneMultipleChoiceTaskPane;
 
         // Event Handlers
         private void RibbonAddIn_Startup(object sender, System.EventArgs e)
@@ -58,7 +68,8 @@ namespace ALPRibbon
             // hook into powerpoint events
             this.Application.SlideSelectionChanged +=
                 new PowerPoint.EApplication_SlideSelectionChangedEventHandler(Application_SlideSelectionChanged);
-
+            
+            // LogIn Custom Pane
             ALPPaneLogInControl = new ALPPaneLogIn();
             ALPPaneLogInTaskPane = this.CustomTaskPanes.Add(ALPPaneLogInControl, "User Sign In");
             ALPPaneLogInTaskPane.VisibleChanged += new EventHandler(ALPPaneLogInTaskPane_VisibleChanged);
@@ -72,6 +83,7 @@ namespace ALPRibbon
             // Set docking restrictions
             ALPPaneLogInTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
+            // Upload Custom Pane
             ALPPaneUploadControl = new ALPPaneUpload();
             ALPPaneUploadTaskPane = this.CustomTaskPanes.Add(ALPPaneUploadControl, "Upload Presentation");
             ALPPaneUploadTaskPane.VisibleChanged += new EventHandler(ALPPaneUploadTaskPane_VisibleChanged);
@@ -84,6 +96,21 @@ namespace ALPRibbon
             ALPPaneUploadTaskPane.Width = 450;
             // Set docking restrictions
             ALPPaneUploadTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
+
+            // MultipleChoice Custom Pane
+            ALPPaneMultipleChoiceControl = new ALPPaneMultipleChoice();
+            ALPPaneMultipleChoiceTaskPane = this.CustomTaskPanes.Add(ALPPaneMultipleChoiceControl, "Multiple Choice");
+            ALPPaneMultipleChoiceTaskPane.VisibleChanged += new EventHandler(ALPPaneMultipleChoiceTaskPane_VisibleChanged);
+            // Set default for floating view    
+            ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
+            ALPPaneMultipleChoiceTaskPane.Width = 275;
+            ALPPaneMultipleChoiceTaskPane.Height = 550;
+            // Set default for docked view    
+            ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
+            ALPPaneMultipleChoiceTaskPane.Width = 275;
+            // Set docking restrictions
+            ALPPaneMultipleChoiceTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
+
         }
 
         private void RibbonAddIn_Shutdown(object sender, System.EventArgs e)
@@ -112,6 +139,11 @@ namespace ALPRibbon
                 MoveWindow(window, 600, 200, ALPPaneUploadTaskPane.Width, ALPPaneUploadTaskPane.Height, true);
             }
 */        }
+
+        private void ALPPaneMultipleChoiceTaskPane_VisibleChanged(object sender, System.EventArgs e)
+        {
+            Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = ALPPaneMultipleChoiceTaskPane.Visible;
+        }
 
         [DllImport("user32.dll", EntryPoint = "FindWindowW")]
         public static extern System.IntPtr FindWindowW([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpClassName, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpWindowName);

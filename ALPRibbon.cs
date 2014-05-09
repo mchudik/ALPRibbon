@@ -41,16 +41,19 @@ namespace ALPRibbon
 
         private void MultipleChoiceButton_Click(object sender, RibbonControlEventArgs e)
         {
-            PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
-            PowerPoint.Presentation oPres = oApp.ActivePresentation;
-            PowerPoint.PpSlideLayout oLayout = PowerPoint.PpSlideLayout.ppLayoutBlank;
-            PowerPoint.View oView = oApp.ActiveWindow.View;
+            Globals.RibbonAddIn.ALPMultipleChoiceTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
 
-            int totalSlideCount = oPres.Slides.Count;
-            int currentSlide = RibbonAddIn.ALPCurrentSlide;
-
-            oPres.Slides.Add(currentSlide + 1, oLayout);
-            oView.GotoSlide(currentSlide + 1);
+            if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
+            {
+                PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
+                PowerPoint.Presentation oPres = oApp.ActivePresentation;
+                PowerPoint.PpSlideLayout oLayout = PowerPoint.PpSlideLayout.ppLayoutBlank;
+                PowerPoint.View oView = oApp.ActiveWindow.View;
+                
+                // Insert Slide after the current slide and select it
+                oPres.Slides.Add(RibbonAddIn.ALPCurrentSlide + 1, oLayout);
+                oView.GotoSlide(RibbonAddIn.ALPCurrentSlide + 1);
+            }
         }
     }
 }

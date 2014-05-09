@@ -194,6 +194,12 @@
     <Compile Include="ALPPaneLogIn.Designer.cs">
       <DependentUpon>ALPPaneLogIn.cs</DependentUpon>
     </Compile>
+    <Compile Include="ALPPaneMultipleChoice.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ALPPaneMultipleChoice.Designer.cs">
+      <DependentUpon>ALPPaneMultipleChoice.cs</DependentUpon>
+    </Compile>
     <Compile Include="ALPPaneUpload.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -216,6 +222,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ALPPaneLogIn.resx">
       <DependentUpon>ALPPaneLogIn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ALPPaneMultipleChoice.resx">
+      <DependentUpon>ALPPaneMultipleChoice.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ALPPaneUpload.resx">
       <DependentUpon>ALPPaneUpload.cs</DependentUpon>
