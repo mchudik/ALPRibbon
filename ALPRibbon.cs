@@ -42,7 +42,7 @@ namespace ALPRibbon
         private void MultipleChoiceButton_Click(object sender, RibbonControlEventArgs e)
         {
             Globals.RibbonAddIn.ALPMultipleChoiceTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
-
+/*
             if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
             {
                 PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
@@ -78,6 +78,6 @@ namespace ALPRibbon
                 oShapeText.Left = nSlideWidth / 10;
                 oShapeText.Top = 3*(nSlideHeight / 9);
             }
-        }
+  */      }
     }
 }

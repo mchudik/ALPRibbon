@@ -103,11 +103,11 @@ namespace ALPRibbon
             ALPPaneMultipleChoiceTaskPane.VisibleChanged += new EventHandler(ALPPaneMultipleChoiceTaskPane_VisibleChanged);
             // Set default for floating view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneMultipleChoiceTaskPane.Width = 275;
+            ALPPaneMultipleChoiceTaskPane.Width = 600;
             ALPPaneMultipleChoiceTaskPane.Height = 550;
             // Set default for docked view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneMultipleChoiceTaskPane.Width = 275;
+            ALPPaneMultipleChoiceTaskPane.Width = 600;
             // Set docking restrictions
             ALPPaneMultipleChoiceTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
