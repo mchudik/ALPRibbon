@@ -68,6 +68,16 @@ namespace ALPRibbon
             // hook into powerpoint events
             this.Application.SlideSelectionChanged +=
                 new PowerPoint.EApplication_SlideSelectionChangedEventHandler(Application_SlideSelectionChanged);
+
+            // hook into slideshow events
+            this.Application.SlideShowBegin +=
+                new PowerPoint.EApplication_SlideShowBeginEventHandler(Application_SlideShowBegin);
+            this.Application.SlideShowNextSlide +=
+                new PowerPoint.EApplication_SlideShowNextSlideEventHandler(Application_SlideShowNextSlide);
+            this.Application.SlideShowOnPrevious +=
+                new PowerPoint.EApplication_SlideShowOnPreviousEventHandler(Application_SlideShowOnPrevious);
+            this.Application.SlideShowEnd +=
+                new PowerPoint.EApplication_SlideShowEndEventHandler(Application_SlideShowEnd);
             
             // LogIn Custom Pane
             ALPPaneLogInControl = new ALPPaneLogIn();
@@ -118,9 +128,59 @@ namespace ALPRibbon
             Directory.Delete(RibbonAddIn.WORKING_DIR, true);
         }
 
+        // powerpoint events
         private void Application_SlideSelectionChanged(PowerPoint.SlideRange SldRange)
         {
             _currentSlideNum = SldRange.SlideIndex;
+        }
+
+        // slideshow events
+        void Application_SlideShowBegin(PowerPoint.SlideShowWindow wnd)
+        {
+        }
+
+        void Application_SlideShowNextSlide(PowerPoint.SlideShowWindow wnd)
+        {
+            // Remove Temporary pictures
+            foreach (PowerPoint.Shape shape in wnd.View.Slide.Shapes)
+            {
+                if (shape.AlternativeText.Equals("Temporary"))
+                {
+                    shape.Delete();
+                }
+            }
+
+            // Create picture out of the URL and add it to the slide
+            if (ALPPowerpointUtils.GetSlideNotesText(wnd.View.Slide).Contains("http"))
+            {
+                WebsiteToImage websiteToImage = new WebsiteToImage(ALPPowerpointUtils.GetSlideNotesText(wnd.View.Slide), @RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\PageHtml.jpg");
+                websiteToImage.Generate();
+                PowerPoint.Shape oShape = wnd.View.Slide.Shapes.AddPicture(@RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\PageHtml.jpg", Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoFalse, 0, 0, wnd.View.Slide.Master.Width, wnd.View.Slide.Master.Height);
+                oShape.AlternativeText = "Temporary";
+            }
+        }
+
+        void Application_SlideShowOnPrevious(PowerPoint.SlideShowWindow wnd)
+        {
+        }
+
+        void Application_SlideShowEnd(PowerPoint.Presentation pres)
+        {
+            PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
+            PowerPoint.Presentation oPres = oApp.ActivePresentation;
+            for (int i = 1; i < oPres.Slides.Count + 1; i++)
+            {
+                PowerPoint.Slide currentSlide = oPres.Slides[i];
+                foreach (PowerPoint.Shape shape in currentSlide.Shapes)
+                {
+                    if (shape.AlternativeText.Equals("Temporary"))
+                    {
+                        shape.Delete();
+                    }
+                }
+            }
+            // clean  the export directory
+            ALPGeneralUtils.ClearDirectory(RibbonAddIn.EXPORT_DIR);
         }
 
         private void ALPPaneLogInTaskPane_VisibleChanged(object sender, System.EventArgs e)

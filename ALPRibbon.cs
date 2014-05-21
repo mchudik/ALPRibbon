@@ -78,6 +78,23 @@ namespace ALPRibbon
                 oShapeText.Left = nSlideWidth / 10;
                 oShapeText.Top = 3*(nSlideHeight / 9);
             }
-  */      }
+  */
+/*
+            if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
+            {
+                    PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
+                    PowerPoint.Presentation oPres = oApp.ActivePresentation;
+
+                    // Insert Slide after the current slide and select it
+                    PowerPoint.Slide oSlide = oPres.Slides.Add(RibbonAddIn.ALPCurrentSlide + 1, PowerPoint.PpSlideLayout.ppLayoutBlank);
+                    oApp.ActiveWindow.View.GotoSlide(oSlide.SlideIndex);
+
+                    // Create picture out of the URL and add it to the slide
+//                    WebsiteToImage websiteToImage = new WebsiteToImage("http://www.isdt.com", @"C:\\temp\\Test.jpg");
+                    WebsiteToImage websiteToImage = new WebsiteToImage("http://localhost:9000/login", @"C:\\temp\\Test.jpg");
+                    websiteToImage.Generate();
+                    oSlide.Shapes.AddPicture(@"C:\\temp\\Test.jpg", Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0, oPres.PageSetup.SlideWidth, oPres.PageSetup.SlideHeight);
+            }
+*/        }
     }
 }

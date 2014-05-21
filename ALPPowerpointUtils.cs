@@ -203,5 +203,21 @@ namespace ALPRibbon
                 }
             }
         }
+
+        public static string GetSlideNotesText(PowerPoint.Slide slide)
+        {
+            if (slide.HasNotesPage == Microsoft.Office.Core.MsoTriState.msoTrue)
+            {
+                PowerPoint.Shape oShape = slide.NotesPage.Shapes.Placeholders._Index(2);
+                if (oShape.HasTextFrame == Microsoft.Office.Core.MsoTriState.msoTrue)
+                {
+                    if (oShape.TextFrame.HasText == Microsoft.Office.Core.MsoTriState.msoTrue)
+                    {
+                        return oShape.TextFrame.TextRange.Text;
+                    }
+                }
+            }
+            return "";
+        }
     }
 }

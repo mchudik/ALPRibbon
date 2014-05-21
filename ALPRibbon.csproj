@@ -214,6 +214,7 @@
     </Compile>
     <Compile Include="ALPGeneralUtils.cs" />
     <Compile Include="ALPPowerpointUtils.cs" />
+    <Compile Include="ALPWebsiteToImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
