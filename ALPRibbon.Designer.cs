@@ -47,7 +47,7 @@
             this.FreeResponseButton = this.Factory.CreateRibbonToggleButton();
             this.Sources = this.Factory.CreateRibbonGroup();
             this.AnalyticsButton = this.Factory.CreateRibbonToggleButton();
-            this.HelpButton = this.Factory.CreateRibbonButton();
+            this.HelpButton = this.Factory.CreateRibbonToggleButton();
             this.ALPRibbonTab.SuspendLayout();
             this.Account.SuspendLayout();
             this.Content.SuspendLayout();
@@ -225,7 +225,7 @@
         internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton ImageQuizButton;
         internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton FreeResponseButton;
         internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton AnalyticsButton;
-        internal Microsoft.Office.Tools.Ribbon.RibbonButton HelpButton;
+        internal Microsoft.Office.Tools.Ribbon.RibbonToggleButton HelpButton;
     }
 
     partial class ThisRibbonCollection

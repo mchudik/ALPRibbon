@@ -19,6 +19,7 @@ namespace ALPRibbon
 
         // Presentation variables
         private static int _currentSlideNum = 0;
+        public bool bDebug = false;
 
         // Properties
         public static int ALPCurrentSlide

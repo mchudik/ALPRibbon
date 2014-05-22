@@ -19,8 +19,9 @@ namespace ALPRibbon
 
         private void Help_Click(object sender, RibbonControlEventArgs e)
         {
-            ALPAboutBox dlg = new ALPAboutBox();
-            dlg.ShowDialog();
+//            ALPAboutBox dlg = new ALPAboutBox();
+//            dlg.ShowDialog();
+            Globals.RibbonAddIn.bDebug = ((RibbonToggleButton)sender).Checked;
         }
 
         private void SignIn_Click(object sender, RibbonControlEventArgs e)
@@ -42,59 +43,6 @@ namespace ALPRibbon
         private void MultipleChoiceButton_Click(object sender, RibbonControlEventArgs e)
         {
             Globals.RibbonAddIn.ALPMultipleChoiceTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
-/*
-            if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
-            {
-                PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
-                PowerPoint.Presentation oPres = oApp.ActivePresentation;
-                PowerPoint.PpSlideLayout oLayout = PowerPoint.PpSlideLayout.ppLayoutBlank;
-                PowerPoint.View oView = oApp.ActiveWindow.View;
-                
-                // Insert Slide after the current slide and select it
-                PowerPoint.Slide oSlide = oPres.Slides.Add(RibbonAddIn.ALPCurrentSlide + 1, oLayout);
-                oView.GotoSlide(oSlide.SlideIndex);
-
-                // Display Question Title
-                PowerPoint.PageSetup oPageSetup = oPres.PageSetup;
-                float nSlideWidth = oPageSetup.SlideWidth;
-                float nSlideHeight = oPageSetup.SlideHeight;
-                PowerPoint.Shapes oShapes = oSlide.Shapes;
-                PowerPoint.Shape oShapeArt = oShapes.AddTextEffect(Microsoft.Office.Core.MsoPresetTextEffect.msoTextEffect16, "Define Question", "Tahoma", 42, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoFalse, 100, 100);
-                oShapeArt.Left = (nSlideWidth - oShapeArt.Width) / 2;
-                oShapeArt.Top = (nSlideHeight - oShapeArt.Height) / 7;
-
-                // Display bulleted answer list
-                PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
-                PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
-                oTextRange.Text = "Answer One\nAnswer Two\nAnswer Three\nAnswer Four";
-                oTextRange.ParagraphFormat.Alignment = PowerPoint.PpParagraphAlignment.ppAlignLeft;
-                PowerPoint.ParagraphFormat oParagraphFormat = oTextRange.ParagraphFormat;
-                oParagraphFormat.SpaceWithin = 2;
-                oParagraphFormat.Bullet.Type = PowerPoint.PpBulletType.ppBulletNumbered;
-                oTextRange.Font.Name = "Tahoma";
-                oTextRange.Font.Size = 24;
-                oShapeText.Width = 8*(nSlideWidth / 10);
-                oShapeText.Height = oShapeText.TextFrame.TextRange.BoundHeight;
-                oShapeText.Left = nSlideWidth / 10;
-                oShapeText.Top = 3*(nSlideHeight / 9);
-            }
-  */
-/*
-            if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
-            {
-                    PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
-                    PowerPoint.Presentation oPres = oApp.ActivePresentation;
-
-                    // Insert Slide after the current slide and select it
-                    PowerPoint.Slide oSlide = oPres.Slides.Add(RibbonAddIn.ALPCurrentSlide + 1, PowerPoint.PpSlideLayout.ppLayoutBlank);
-                    oApp.ActiveWindow.View.GotoSlide(oSlide.SlideIndex);
-
-                    // Create picture out of the URL and add it to the slide
-//                    WebsiteToImage websiteToImage = new WebsiteToImage("http://www.isdt.com", @"C:\\temp\\Test.jpg");
-                    WebsiteToImage websiteToImage = new WebsiteToImage("http://localhost:9000/login", @"C:\\temp\\Test.jpg");
-                    websiteToImage.Generate();
-                    oSlide.Shapes.AddPicture(@"C:\\temp\\Test.jpg", Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0, oPres.PageSetup.SlideWidth, oPres.PageSetup.SlideHeight);
-            }
-*/        }
+        }
     }
 }

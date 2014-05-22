@@ -6,7 +6,7 @@ using System.Windows.Forms;
 using ALPRibbon.Properties;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using Imaging = System.Drawing.Imaging;
-using System.Diagnostics;
+//using System.Diagnostics;
 
 namespace ALPRibbon
 {
@@ -257,18 +257,18 @@ namespace ALPRibbon
                 xmlTextWriter.Formatting = Formatting.Indented;
 
                 //Write an element (this one is the root).
-                xmlTextWriter.WriteStartElement("lecture");
+//                xmlTextWriter.WriteStartElement("lecture");
 
                 //Write the title element.
-                xmlTextWriter.WriteStartElement("title");
-                xmlTextWriter.WriteString(oPres.Name);
-                xmlTextWriter.WriteEndElement();  //title
+//                xmlTextWriter.WriteStartElement("title");
+//                xmlTextWriter.WriteString(oPres.Name);
+//                xmlTextWriter.WriteEndElement();  //title
 
                 //Write the poll element.
-                xmlTextWriter.WriteStartElement("polls");
+//                xmlTextWriter.WriteStartElement("polls");
 
                 xmlTextWriter.WriteStartElement("poll");
-                xmlTextWriter.WriteAttributeString("slide_index", "" + CurentSlideId + "");
+//                xmlTextWriter.WriteAttributeString("slide_index", "" + CurentSlideId + "");
                 xmlTextWriter.WriteAttributeString("type", "multiple_choice");
 
                 xmlTextWriter.WriteStartElement("question");
@@ -300,8 +300,8 @@ namespace ALPRibbon
                 xmlTextWriter.WriteEndElement();  //poll
 
                 // Close elements
-                xmlTextWriter.WriteEndElement();  //polls
-                xmlTextWriter.WriteEndElement();  //lecture
+//                xmlTextWriter.WriteEndElement();  //polls
+//                xmlTextWriter.WriteEndElement();  //lecture
 
                 // Write the XML to file and close the xmlFile.
                 xmlTextWriter.Flush();
@@ -344,8 +344,8 @@ namespace ALPRibbon
                         if (xmlTextReader.Name == "poll")
                         {
                             nRows = 0;
-                            Debug.WriteLine(xmlTextReader.GetAttribute("slide_index"));
-                            Debug.WriteLine(xmlTextReader.GetAttribute("type"));
+//                            Debug.WriteLine(xmlTextReader.GetAttribute("slide_index"));
+//                            Debug.WriteLine(xmlTextReader.GetAttribute("type"));
                         }
                         if (xmlTextReader.Name == "question")
                         {

@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using ALPRibbon.Properties;
 
 namespace ALPRibbon
 {
@@ -20,35 +21,40 @@ namespace ALPRibbon
 
         private void SubmitButton_Click(object sender, EventArgs e)
         {
-            ALPPowerpointUtils.WriteMultiQuestionXMLFile(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
-            string textXML = ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
-            ALPPowerpointUtils.SetSlideNotesText(Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide], textXML);
-//
-            PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
-            // Remove XML Placeholder shapes
-            foreach (PowerPoint.Shape shape in oSlide.Shapes)
+            try
             {
-                if (shape.AlternativeText.Equals("MultipleChoicePoll"))
-                {
-//                    MessageBox.Show("Retrieved Text Embedded to the Slice:\n\n" + shape.TextFrame.TextRange.Text);
-//                    ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
-                    shape.Delete();
-                }
-            }
+                if (RibbonAddIn.ALPCurrentSlide <= 0)
+                    return;
 
-            // Add XML Placeholder shapes
-            PowerPoint.Shapes oShapes = oSlide.Shapes;
-            PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
-            PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
-            oTextRange.Text = textXML;
-            oTextRange.Font.Name = "Tahoma";
-            oTextRange.Font.Size = 24;
-            oShapeText.Width = oSlide.Master.Width;
-            oShapeText.Left = 0;
-            oShapeText.Top = 0;
-//            oShapeText.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
-            oShapeText.AlternativeText = "MultipleChoicePoll";
-            //
+                PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
+                // Remove XML Placeholder shapes for this poll
+                foreach (PowerPoint.Shape shape in oSlide.Shapes)
+                {
+                    if (shape.AlternativeText.Equals("MultipleChoicePoll"))
+                    {
+                        shape.Delete();
+                    }
+                }
+
+                // Add XML Placeholder shape for this poll
+                string textXML = ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                PowerPoint.Shapes oShapes = oSlide.Shapes;
+                PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
+                PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
+                oTextRange.Text = textXML;
+                oTextRange.Font.Name = "Tahoma";
+                oTextRange.Font.Size = 20;
+                oShapeText.Width = oSlide.Master.Width;
+                oShapeText.Left = 0;
+                oShapeText.Top = 0;
+                if (Globals.RibbonAddIn.bDebug == false)
+                    oShapeText.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                oShapeText.AlternativeText = "MultipleChoicePoll";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void OnResize(object sender, EventArgs e)
@@ -76,34 +82,57 @@ namespace ALPRibbon
 
         public void OnInitialize()
         {
-            ResetVariables();
-            PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
-            // Process XML Placeholder shapes
-            foreach (PowerPoint.Shape shape in oSlide.Shapes)
+            try
             {
-                if (shape.AlternativeText.Equals("MultipleChoicePoll"))
+                // Clear all UI variables
+                ResetVariables();
+
+                if (RibbonAddIn.ALPCurrentSlide <= 0)
+                    return;
+
+                PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
+                // Read XML Placeholder shape for this poll
+                foreach (PowerPoint.Shape shape in oSlide.Shapes)
                 {
-                    ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                    if (shape.AlternativeText.Equals("MultipleChoicePoll"))
+                    {
+                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         public void OnExit()
         {
-            if (Globals.RibbonAddIn.Application.Active == Microsoft.Office.Core.MsoTriState.msoTrue)
+            try
             {
-                if (MessageBox.Show("Remove Poll from current slide?", "Multiple Choice", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                if (RibbonAddIn.ALPCurrentSlide <= 0)
+                    return;
+
+                if (Globals.RibbonAddIn.Application.Active == Microsoft.Office.Core.MsoTriState.msoTrue)
                 {
+                    // Clear all UI variables
+                    ResetVariables();
                     PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
-                    // Process XML Placeholder shapes
+                    // Remove XML Placeholder shape for this poll
                     foreach (PowerPoint.Shape shape in oSlide.Shapes)
                     {
                         if (shape.AlternativeText.Equals("MultipleChoicePoll"))
                         {
-                            shape.Delete();
-                            ResetVariables();
+                            if (MessageBox.Show("Remove Poll from current slide?", "Multiple Choice", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            {
+                                shape.Delete();
+                            }
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
