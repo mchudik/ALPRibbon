@@ -37,10 +37,10 @@
             this.AnswerDescTextBox = new System.Windows.Forms.TextBox();
             this.JustificationDescTextBox = new System.Windows.Forms.TextBox();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.SubmitButton = new System.Windows.Forms.Button();
             this.Bullet = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Correct = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Answer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubmitButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -139,15 +139,6 @@
             this.dataGridView1.Size = new System.Drawing.Size(578, 172);
             this.dataGridView1.TabIndex = 19;
             // 
-            // SubmitButton
-            // 
-            this.SubmitButton.Location = new System.Drawing.Point(21, 471);
-            this.SubmitButton.Name = "SubmitButton";
-            this.SubmitButton.Size = new System.Drawing.Size(578, 29);
-            this.SubmitButton.TabIndex = 20;
-            this.SubmitButton.Text = "Submit";
-            this.SubmitButton.UseVisualStyleBackColor = true;
-            // 
             // Bullet
             // 
             this.Bullet.DividerWidth = 10;
@@ -170,6 +161,16 @@
             this.Answer.HeaderText = "Answer";
             this.Answer.Name = "Answer";
             // 
+            // SubmitButton
+            // 
+            this.SubmitButton.Location = new System.Drawing.Point(21, 471);
+            this.SubmitButton.Name = "SubmitButton";
+            this.SubmitButton.Size = new System.Drawing.Size(578, 29);
+            this.SubmitButton.TabIndex = 20;
+            this.SubmitButton.Text = "Submit";
+            this.SubmitButton.UseVisualStyleBackColor = true;
+            this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
+            // 
             // ALPPaneMultipleChoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -187,6 +188,7 @@
             this.Controls.Add(this.QuestionLabel);
             this.Name = "ALPPaneMultipleChoice";
             this.Size = new System.Drawing.Size(602, 526);
+            this.Resize += new System.EventHandler(this.OnResize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

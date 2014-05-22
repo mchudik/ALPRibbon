@@ -113,11 +113,11 @@ namespace ALPRibbon
             ALPPaneMultipleChoiceTaskPane.VisibleChanged += new EventHandler(ALPPaneMultipleChoiceTaskPane_VisibleChanged);
             // Set default for floating view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneMultipleChoiceTaskPane.Width = 600;
-            ALPPaneMultipleChoiceTaskPane.Height = 550;
+            ALPPaneMultipleChoiceTaskPane.Width = 450;
+            ALPPaneMultipleChoiceTaskPane.Height = 600;
             // Set default for docked view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneMultipleChoiceTaskPane.Width = 600;
+            ALPPaneMultipleChoiceTaskPane.Width = 450;
             // Set docking restrictions
             ALPPaneMultipleChoiceTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
@@ -132,6 +132,10 @@ namespace ALPRibbon
         private void Application_SlideSelectionChanged(PowerPoint.SlideRange SldRange)
         {
             _currentSlideNum = SldRange.SlideIndex;
+            if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
+            {
+                Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnInitialize();
+            }
         }
 
         // slideshow events
@@ -203,6 +207,14 @@ namespace ALPRibbon
         private void ALPPaneMultipleChoiceTaskPane_VisibleChanged(object sender, System.EventArgs e)
         {
             Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = ALPPaneMultipleChoiceTaskPane.Visible;
+            if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
+            {
+                Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnInitialize();
+            }
+            else
+            {
+                Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnExit();
+            }
         }
 
         [DllImport("user32.dll", EntryPoint = "FindWindowW")]

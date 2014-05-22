@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using ALPRibbon.Properties;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using Imaging = System.Drawing.Imaging;
+using System.Diagnostics;
 
 namespace ALPRibbon
 {
@@ -218,6 +219,158 @@ namespace ALPRibbon
                 }
             }
             return "";
+        }
+
+        public static void SetSlideNotesText(PowerPoint.Slide slide, string text)
+        {
+            PowerPoint.Shape oShape = slide.NotesPage.Shapes.Placeholders._Index(2);
+            oShape.TextFrame.TextRange.Delete();
+            oShape.TextFrame.TextRange.InsertAfter(text);
+        }
+
+        public static string WriteMultiQuestionXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            using (var ms = new MemoryStream())
+            using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
+            {
+                WriteMultiQuestionXML(xmlString, oPres, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+                return System.Text.Encoding.UTF8.GetString(ms.ToArray());
+            }
+        }
+
+        public static void WriteMultiQuestionXMLFile(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            using (XmlTextWriter xmlFile = new XmlTextWriter(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\LecturePolls.xml", System.Text.Encoding.UTF8))
+            {
+                WriteMultiQuestionXML(xmlFile, oPres, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+            }
+        }
+
+        public static void WriteMultiQuestionXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            try
+            {
+                //Write the XML delcaration. 
+                xmlTextWriter.WriteStartDocument();
+
+                //Use indentation for readability.
+                xmlTextWriter.Formatting = Formatting.Indented;
+
+                //Write an element (this one is the root).
+                xmlTextWriter.WriteStartElement("lecture");
+
+                //Write the title element.
+                xmlTextWriter.WriteStartElement("title");
+                xmlTextWriter.WriteString(oPres.Name);
+                xmlTextWriter.WriteEndElement();  //title
+
+                //Write the poll element.
+                xmlTextWriter.WriteStartElement("polls");
+
+                xmlTextWriter.WriteStartElement("poll");
+                xmlTextWriter.WriteAttributeString("slide_index", "" + CurentSlideId + "");
+                xmlTextWriter.WriteAttributeString("type", "multiple_choice");
+
+                xmlTextWriter.WriteStartElement("question");
+                xmlTextWriter.WriteAttributeString("text", QuestionTextBox.Text);
+                xmlTextWriter.WriteEndElement();  //question
+
+
+                foreach (DataGridViewRow row in dataGridView.Rows)
+                {
+                    if (row.IsNewRow) break;
+                    if (row.Cells[2].Value == null) continue;   //No text in answer
+
+                    xmlTextWriter.WriteStartElement("answer");
+                    if (row.Cells[0].Value != null)
+                        xmlTextWriter.WriteAttributeString("bullet", row.Cells[0].Value.ToString());
+                    if (row.Cells[1].Value != null)
+                        xmlTextWriter.WriteAttributeString("correct", row.Cells[1].Value.ToString());
+                    else
+                        xmlTextWriter.WriteAttributeString("correct", "False");
+                    xmlTextWriter.WriteAttributeString("text", row.Cells[2].Value.ToString());
+                    xmlTextWriter.WriteEndElement();  //answer
+                }
+
+                xmlTextWriter.WriteStartElement("justification");
+                xmlTextWriter.WriteAttributeString("text", JustificationTextBox.Text);
+                xmlTextWriter.WriteAttributeString("required", AddJustificationCheckBox.Checked.ToString());
+                xmlTextWriter.WriteEndElement();  //justification
+
+                xmlTextWriter.WriteEndElement();  //poll
+
+                // Close elements
+                xmlTextWriter.WriteEndElement();  //polls
+                xmlTextWriter.WriteEndElement();  //lecture
+
+                // Write the XML to file and close the xmlFile.
+                xmlTextWriter.Flush();
+                xmlTextWriter.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public static void ReadMultiQuestionXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
+            using (XmlTextReader xmlString = new XmlTextReader(ms))
+            {
+                ReadMultiQuestionXML(xmlString, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+            }
+        }
+
+        public static void ReadMultiQuestionXMLFile(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            using (XmlTextReader xmlFile = new XmlTextReader(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\LecturePolls.xml"))
+            {
+                ReadMultiQuestionXML(xmlFile, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+            }
+        }
+
+        public static void ReadMultiQuestionXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            try
+            {
+                int nRows = 0;
+                //  Loop over the XML file
+                while (xmlTextReader.Read())
+                {
+                    //  Here we check the type of the node, in this case we are looking for element
+                    if (xmlTextReader.NodeType == XmlNodeType.Element)
+                    {
+                        if (xmlTextReader.Name == "poll")
+                        {
+                            nRows = 0;
+                            Debug.WriteLine(xmlTextReader.GetAttribute("slide_index"));
+                            Debug.WriteLine(xmlTextReader.GetAttribute("type"));
+                        }
+                        if (xmlTextReader.Name == "question")
+                        {
+                            QuestionTextBox.Text = xmlTextReader.GetAttribute("text");
+                        }
+                        if (xmlTextReader.Name == "answer")
+                        {
+                            dataGridView.Rows.Add();
+                            dataGridView.Rows[nRows].Cells[0].Value = xmlTextReader.GetAttribute("bullet");
+                            dataGridView.Rows[nRows].Cells[1].Value = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("correct").ToLower());
+                            dataGridView.Rows[nRows].Cells[2].Value = xmlTextReader.GetAttribute("text");
+                            nRows++;
+                        }
+                        if (xmlTextReader.Name == "justification")
+                        {
+                            JustificationTextBox.Text = xmlTextReader.GetAttribute("text");
+                            AddJustificationCheckBox.Checked = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("required").ToLower());
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
