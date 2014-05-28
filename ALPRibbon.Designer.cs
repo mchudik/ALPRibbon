@@ -154,6 +154,7 @@
             this.ImageQuizButton.ShowImage = true;
             this.ImageQuizButton.SuperTip = "When an instructor decides to create an image quiz, a new slide is created that a" +
     "llows them to upload their image.";
+            this.ImageQuizButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.ImageQuizButton_Click);
             // 
             // FreeResponseButton
             // 

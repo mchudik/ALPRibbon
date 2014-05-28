@@ -188,6 +188,12 @@
     <Compile Include="ALPAboutBox.Designer.cs">
       <DependentUpon>ALPAboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="ALPPaneImageQuiz.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="ALPPaneImageQuiz.Designer.cs">
+      <DependentUpon>ALPPaneImageQuiz.cs</DependentUpon>
+    </Compile>
     <Compile Include="ALPPaneLogIn.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -220,6 +226,9 @@
     </Compile>
     <EmbeddedResource Include="ALPAboutBox.resx">
       <DependentUpon>ALPAboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ALPPaneImageQuiz.resx">
+      <DependentUpon>ALPPaneImageQuiz.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ALPPaneLogIn.resx">
       <DependentUpon>ALPPaneLogIn.cs</DependentUpon>

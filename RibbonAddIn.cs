@@ -50,6 +50,13 @@ namespace ALPRibbon
                 return ALPPaneMultipleChoiceTaskPane;
             }
         }
+        public Microsoft.Office.Tools.CustomTaskPane ALPImageQuizTaskPane
+        {
+            get
+            {
+                return ALPPaneImageQuizTaskPane;
+            }
+        }
 
 
         // Custom Pane Controls
@@ -59,6 +66,8 @@ namespace ALPRibbon
         private Microsoft.Office.Tools.CustomTaskPane ALPPaneUploadTaskPane;
         private ALPPaneMultipleChoice ALPPaneMultipleChoiceControl;
         private Microsoft.Office.Tools.CustomTaskPane ALPPaneMultipleChoiceTaskPane;
+        private ALPPaneImageQuiz ALPPaneImageQuizControl;
+        private Microsoft.Office.Tools.CustomTaskPane ALPPaneImageQuizTaskPane;
 
         // Event Handlers
         private void RibbonAddIn_Startup(object sender, System.EventArgs e)
@@ -114,13 +123,27 @@ namespace ALPRibbon
             ALPPaneMultipleChoiceTaskPane.VisibleChanged += new EventHandler(ALPPaneMultipleChoiceTaskPane_VisibleChanged);
             // Set default for floating view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneMultipleChoiceTaskPane.Width = 450;
+            ALPPaneMultipleChoiceTaskPane.Width = 400;
             ALPPaneMultipleChoiceTaskPane.Height = 600;
             // Set default for docked view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneMultipleChoiceTaskPane.Width = 450;
+            ALPPaneMultipleChoiceTaskPane.Width = 400;
             // Set docking restrictions
             ALPPaneMultipleChoiceTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
+
+            // ImageQuiz Custom Pane
+            ALPPaneImageQuizControl = new ALPPaneImageQuiz();
+            ALPPaneImageQuizTaskPane = this.CustomTaskPanes.Add(ALPPaneImageQuizControl, "Image Quiz");
+            ALPPaneImageQuizTaskPane.VisibleChanged += new EventHandler(ALPPaneImageQuizTaskPane_VisibleChanged);
+            // Set default for floating view    
+            ALPPaneImageQuizTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
+            ALPPaneImageQuizTaskPane.Width = 400;
+            ALPPaneImageQuizTaskPane.Height = 600;
+            // Set default for docked view    
+            ALPPaneImageQuizTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
+            ALPPaneImageQuizTaskPane.Width = 400;
+            // Set docking restrictions
+            ALPPaneImageQuizTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
         }
 
@@ -136,6 +159,10 @@ namespace ALPRibbon
             if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
             {
                 Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnInitialize();
+            }
+            if (Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked)
+            {
+                Globals.RibbonAddIn.ALPPaneImageQuizControl.OnInitialize();
             }
         }
 
@@ -215,6 +242,19 @@ namespace ALPRibbon
             else
             {
                 Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnExit();
+            }
+        }
+
+        private void ALPPaneImageQuizTaskPane_VisibleChanged(object sender, System.EventArgs e)
+        {
+            Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = ALPPaneImageQuizTaskPane.Visible;
+            if (Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked)
+            {
+                Globals.RibbonAddIn.ALPPaneImageQuizControl.OnInitialize();
+            }
+            else
+            {
+                Globals.RibbonAddIn.ALPPaneImageQuizControl.OnExit();
             }
         }
 
