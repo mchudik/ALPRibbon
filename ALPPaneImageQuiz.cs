@@ -59,13 +59,22 @@ namespace ALPRibbon
 
         private void OnResize(object sender, EventArgs e)
         {
+            // Dynamic Width Calculation
             int PaddedWidth = this.Width - 40;
             QuestionTextBox.Width = PaddedWidth;
             ImagePictureBox.Width = PaddedWidth;
             JustificationTextBox.Width = PaddedWidth;
             SubmitButton.Width = PaddedWidth;
             DescriptionTextBox.Width = PaddedWidth;
-            JustificationDescTextBox.Width = PaddedWidth;
+
+            // Dynamic Height Calculation
+            ImagePictureBox.Height = this.Height - ImagePictureBox.Top - 169;
+            if (ImagePictureBox.Height < 40) ImagePictureBox.Height = 50;
+            int PaddedHeight = ImagePictureBox.Top + ImagePictureBox.Height;
+            AddJustificationCheckBox.Top = PaddedHeight + 10;
+            JustificationDescTextBox.Top = PaddedHeight + 33;
+            JustificationTextBox.Top = PaddedHeight + 62;
+            SubmitButton.Top = PaddedHeight + 118;
         }
 
         private void ResetVariables()

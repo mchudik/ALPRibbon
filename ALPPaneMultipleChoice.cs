@@ -59,6 +59,7 @@ namespace ALPRibbon
 
         private void OnResize(object sender, EventArgs e)
         {
+            // Dynamic Width Calculation
             int PaddedWidth = this.Width - 40;
             QuestionTextBox.Width = PaddedWidth;
             dataGridView1.Width = PaddedWidth;
@@ -66,6 +67,16 @@ namespace ALPRibbon
             SubmitButton.Width = PaddedWidth;
             AnswerDescTextBox.Width = PaddedWidth;
             JustificationDescTextBox.Width = PaddedWidth;
+
+            // Dynamic Height Calculation
+            dataGridView1.Height = this.Height - dataGridView1.Top - 190;
+            if (dataGridView1.Height < 40) dataGridView1.Height = 50;
+            int PaddedHeight = dataGridView1.Top + dataGridView1.Height;
+            JustificationLabel.Top = PaddedHeight + 10;
+            AddJustificationCheckBox.Top = PaddedHeight + 31;
+            JustificationDescTextBox.Top = PaddedHeight + 54;
+            JustificationTextBox.Top = PaddedHeight + 83;
+            SubmitButton.Top = PaddedHeight + 139;
         }
 
         private void ResetVariables()

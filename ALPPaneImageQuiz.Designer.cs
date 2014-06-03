@@ -32,7 +32,6 @@
             this.QuestionTextBox = new System.Windows.Forms.TextBox();
             this.DescriptionLabel = new System.Windows.Forms.Label();
             this.JustificationTextBox = new System.Windows.Forms.TextBox();
-            this.JustificationLabel = new System.Windows.Forms.Label();
             this.AddJustificationCheckBox = new System.Windows.Forms.CheckBox();
             this.JustificationDescTextBox = new System.Windows.Forms.TextBox();
             this.SubmitButton = new System.Windows.Forms.Button();
@@ -80,16 +79,6 @@
             this.JustificationTextBox.TabIndex = 7;
             this.JustificationTextBox.Text = "Briefly explain your answer.";
             // 
-            // JustificationLabel
-            // 
-            this.JustificationLabel.AutoSize = true;
-            this.JustificationLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.JustificationLabel.Location = new System.Drawing.Point(18, 342);
-            this.JustificationLabel.Name = "JustificationLabel";
-            this.JustificationLabel.Size = new System.Drawing.Size(86, 18);
-            this.JustificationLabel.TabIndex = 6;
-            this.JustificationLabel.Text = "Justification";
-            // 
             // AddJustificationCheckBox
             // 
             this.AddJustificationCheckBox.AutoSize = true;
@@ -134,7 +123,7 @@
             // 
             this.ImagePictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.ImagePictureBox.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
-            this.ImagePictureBox.Location = new System.Drawing.Point(21, 179);
+            this.ImagePictureBox.Location = new System.Drawing.Point(21, 180);
             this.ImagePictureBox.Name = "ImagePictureBox";
             this.ImagePictureBox.Size = new System.Drawing.Size(578, 178);
             this.ImagePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
@@ -163,7 +152,6 @@
             this.Controls.Add(this.JustificationDescTextBox);
             this.Controls.Add(this.AddJustificationCheckBox);
             this.Controls.Add(this.JustificationTextBox);
-            this.Controls.Add(this.JustificationLabel);
             this.Controls.Add(this.DescriptionLabel);
             this.Controls.Add(this.QuestionTextBox);
             this.Controls.Add(this.QuestionLabel);
@@ -182,7 +170,6 @@
         private System.Windows.Forms.TextBox QuestionTextBox;
         private System.Windows.Forms.Label DescriptionLabel;
         private System.Windows.Forms.TextBox JustificationTextBox;
-        private System.Windows.Forms.Label JustificationLabel;
         private System.Windows.Forms.CheckBox AddJustificationCheckBox;
         private System.Windows.Forms.TextBox JustificationDescTextBox;
         private System.Windows.Forms.Button SubmitButton;
