@@ -37,7 +37,7 @@ namespace ALPRibbon
                 }
 
                 // Add XML Placeholder shape for this poll
-                string textXML = ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                string textXML = "";// ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
@@ -61,10 +61,10 @@ namespace ALPRibbon
         {
             int PaddedWidth = this.Width - 40;
             QuestionTextBox.Width = PaddedWidth;
-            dataGridView1.Width = PaddedWidth;
+            ImagePictureBox.Width = PaddedWidth;
             JustificationTextBox.Width = PaddedWidth;
             SubmitButton.Width = PaddedWidth;
-            AnswerDescTextBox.Width = PaddedWidth;
+            DescriptionTextBox.Width = PaddedWidth;
             JustificationDescTextBox.Width = PaddedWidth;
         }
 
@@ -73,10 +73,10 @@ namespace ALPRibbon
             QuestionTextBox.Text = "";
             JustificationTextBox.Text = "";
             AddJustificationCheckBox.Checked = false;
-            JustificationDescTextBox.Text = "";
-            while(dataGridView1.Rows.Count > 1)
+            DescriptionTextBox.Text = "";
+//            while (dataGridView1.Rows.Count > 1)
             {
-                dataGridView1.Rows.RemoveAt(0);
+//                dataGridView1.Rows.RemoveAt(0);
             }
         }
 
@@ -96,7 +96,7 @@ namespace ALPRibbon
                 {
                     if (shape.AlternativeText.Equals("ImageQuizPoll"))
                     {
-                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+//                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
                     }
                 }
             }

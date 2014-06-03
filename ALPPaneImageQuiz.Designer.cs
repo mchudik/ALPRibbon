@@ -30,18 +30,16 @@
         {
             this.QuestionLabel = new System.Windows.Forms.Label();
             this.QuestionTextBox = new System.Windows.Forms.TextBox();
-            this.AnswersLabel = new System.Windows.Forms.Label();
+            this.DescriptionLabel = new System.Windows.Forms.Label();
             this.JustificationTextBox = new System.Windows.Forms.TextBox();
             this.JustificationLabel = new System.Windows.Forms.Label();
             this.AddJustificationCheckBox = new System.Windows.Forms.CheckBox();
-            this.AnswerDescTextBox = new System.Windows.Forms.TextBox();
             this.JustificationDescTextBox = new System.Windows.Forms.TextBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Bullet = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Correct = new System.Windows.Forms.DataGridViewCheckBoxColumn();
-            this.Answer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SubmitButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.DescriptionTextBox = new System.Windows.Forms.TextBox();
+            this.ImagePictureBox = new System.Windows.Forms.PictureBox();
+            this.ImageLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.ImagePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // QuestionLabel
@@ -63,15 +61,15 @@
             this.QuestionTextBox.TabIndex = 4;
             this.QuestionTextBox.Text = "Define Question";
             // 
-            // AnswersLabel
+            // DescriptionLabel
             // 
-            this.AnswersLabel.AutoSize = true;
-            this.AnswersLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AnswersLabel.Location = new System.Drawing.Point(18, 103);
-            this.AnswersLabel.Name = "AnswersLabel";
-            this.AnswersLabel.Size = new System.Drawing.Size(65, 18);
-            this.AnswersLabel.TabIndex = 5;
-            this.AnswersLabel.Text = "Answers";
+            this.DescriptionLabel.AutoSize = true;
+            this.DescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.DescriptionLabel.Location = new System.Drawing.Point(18, 85);
+            this.DescriptionLabel.Name = "DescriptionLabel";
+            this.DescriptionLabel.Size = new System.Drawing.Size(152, 18);
+            this.DescriptionLabel.TabIndex = 5;
+            this.DescriptionLabel.Text = "Description (Optional)";
             // 
             // JustificationTextBox
             // 
@@ -102,18 +100,6 @@
             this.AddJustificationCheckBox.Text = "Add Justification";
             this.AddJustificationCheckBox.UseVisualStyleBackColor = true;
             // 
-            // AnswerDescTextBox
-            // 
-            this.AnswerDescTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.AnswerDescTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.AnswerDescTextBox.Enabled = false;
-            this.AnswerDescTextBox.Location = new System.Drawing.Point(21, 124);
-            this.AnswerDescTextBox.Multiline = true;
-            this.AnswerDescTextBox.Name = "AnswerDescTextBox";
-            this.AnswerDescTextBox.Size = new System.Drawing.Size(578, 21);
-            this.AnswerDescTextBox.TabIndex = 9;
-            this.AnswerDescTextBox.Text = "You can select more than one correct answer.";
-            // 
             // JustificationDescTextBox
             // 
             this.JustificationDescTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
@@ -126,41 +112,6 @@
             this.JustificationDescTextBox.TabIndex = 10;
             this.JustificationDescTextBox.Text = "Check this box to ask students to add a follow up free response.";
             // 
-            // dataGridView1
-            // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Bullet,
-            this.Correct,
-            this.Answer});
-            this.dataGridView1.Location = new System.Drawing.Point(21, 151);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(578, 172);
-            this.dataGridView1.TabIndex = 19;
-            // 
-            // Bullet
-            // 
-            this.Bullet.DividerWidth = 10;
-            this.Bullet.HeaderText = "";
-            this.Bullet.MinimumWidth = 40;
-            this.Bullet.Name = "Bullet";
-            this.Bullet.Width = 40;
-            // 
-            // Correct
-            // 
-            this.Correct.HeaderText = "Correct";
-            this.Correct.Name = "Correct";
-            this.Correct.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Correct.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Correct.Width = 70;
-            // 
-            // Answer
-            // 
-            this.Answer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.Answer.HeaderText = "Answer";
-            this.Answer.Name = "Answer";
-            // 
             // SubmitButton
             // 
             this.SubmitButton.Location = new System.Drawing.Point(21, 471);
@@ -171,25 +122,55 @@
             this.SubmitButton.UseVisualStyleBackColor = true;
             this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
+            // DescriptionTextBox
+            // 
+            this.DescriptionTextBox.Location = new System.Drawing.Point(21, 110);
+            this.DescriptionTextBox.Multiline = true;
+            this.DescriptionTextBox.Name = "DescriptionTextBox";
+            this.DescriptionTextBox.Size = new System.Drawing.Size(578, 40);
+            this.DescriptionTextBox.TabIndex = 5;
+            // 
+            // ImagePictureBox
+            // 
+            this.ImagePictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.ImagePictureBox.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.ImagePictureBox.Location = new System.Drawing.Point(21, 179);
+            this.ImagePictureBox.Name = "ImagePictureBox";
+            this.ImagePictureBox.Size = new System.Drawing.Size(578, 178);
+            this.ImagePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.ImagePictureBox.TabIndex = 21;
+            this.ImagePictureBox.TabStop = false;
+            // 
+            // ImageLabel
+            // 
+            this.ImageLabel.AutoSize = true;
+            this.ImageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ImageLabel.Location = new System.Drawing.Point(21, 158);
+            this.ImageLabel.Name = "ImageLabel";
+            this.ImageLabel.Size = new System.Drawing.Size(48, 18);
+            this.ImageLabel.TabIndex = 22;
+            this.ImageLabel.Text = "Image";
+            // 
             // ALPPaneImageQuiz
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.Controls.Add(this.ImageLabel);
+            this.Controls.Add(this.ImagePictureBox);
+            this.Controls.Add(this.DescriptionTextBox);
             this.Controls.Add(this.SubmitButton);
-            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.JustificationDescTextBox);
-            this.Controls.Add(this.AnswerDescTextBox);
             this.Controls.Add(this.AddJustificationCheckBox);
             this.Controls.Add(this.JustificationTextBox);
             this.Controls.Add(this.JustificationLabel);
-            this.Controls.Add(this.AnswersLabel);
+            this.Controls.Add(this.DescriptionLabel);
             this.Controls.Add(this.QuestionTextBox);
             this.Controls.Add(this.QuestionLabel);
             this.Name = "ALPPaneImageQuiz";
             this.Size = new System.Drawing.Size(602, 526);
             this.Resize += new System.EventHandler(this.OnResize);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ImagePictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -199,16 +180,14 @@
 
         private System.Windows.Forms.Label QuestionLabel;
         private System.Windows.Forms.TextBox QuestionTextBox;
-        private System.Windows.Forms.Label AnswersLabel;
+        private System.Windows.Forms.Label DescriptionLabel;
         private System.Windows.Forms.TextBox JustificationTextBox;
         private System.Windows.Forms.Label JustificationLabel;
         private System.Windows.Forms.CheckBox AddJustificationCheckBox;
-        private System.Windows.Forms.TextBox AnswerDescTextBox;
         private System.Windows.Forms.TextBox JustificationDescTextBox;
-        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button SubmitButton;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Bullet;
-        private System.Windows.Forms.DataGridViewCheckBoxColumn Correct;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Answer;
+        private System.Windows.Forms.TextBox DescriptionTextBox;
+        private System.Windows.Forms.PictureBox ImagePictureBox;
+        private System.Windows.Forms.Label ImageLabel;
     }
 }

@@ -73,7 +73,6 @@ namespace ALPRibbon
             QuestionTextBox.Text = "";
             JustificationTextBox.Text = "";
             AddJustificationCheckBox.Checked = false;
-            JustificationDescTextBox.Text = "";
             while(dataGridView1.Rows.Count > 1)
             {
                 dataGridView1.Rows.RemoveAt(0);
