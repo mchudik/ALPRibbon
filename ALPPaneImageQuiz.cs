@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using ALPRibbon.Properties;
+using System.IO;
 
 namespace ALPRibbon
 {
@@ -64,17 +65,19 @@ namespace ALPRibbon
             QuestionTextBox.Width = PaddedWidth;
             ImagePictureBox.Width = PaddedWidth;
             JustificationTextBox.Width = PaddedWidth;
+            MarkSolutionButton.Width = PaddedWidth;
             SubmitButton.Width = PaddedWidth;
             DescriptionTextBox.Width = PaddedWidth;
 
             // Dynamic Height Calculation
-            ImagePictureBox.Height = this.Height - ImagePictureBox.Top - 169;
+            ImagePictureBox.Height = this.Height - ImagePictureBox.Top - 214;
             if (ImagePictureBox.Height < 50) ImagePictureBox.Height = 50;
             int PaddedHeight = ImagePictureBox.Top + ImagePictureBox.Height;
-            AddJustificationCheckBox.Top = PaddedHeight + 10;
-            JustificationDescTextBox.Top = PaddedHeight + 33;
-            JustificationTextBox.Top = PaddedHeight + 62;
-            SubmitButton.Top = PaddedHeight + 118;
+            MarkSolutionButton.Top = PaddedHeight + 10;
+            AddJustificationCheckBox.Top = PaddedHeight + 55;
+            JustificationDescTextBox.Top = PaddedHeight + 78;
+            JustificationTextBox.Top = PaddedHeight + 107;
+            SubmitButton.Top = PaddedHeight + 163;
         }
 
         private void ResetVariables()
@@ -143,6 +146,96 @@ namespace ALPRibbon
             {
                 MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
+
+        private void ImagePictureBox_DoubleClick(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDlg = new OpenFileDialog();
+            openFileDlg.Filter = "Images (*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG|All files (*.*)|*.*";
+            if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
+                ImagePictureBox.Load(openFileDlg.FileName);
+        }
+
+        private Point initialMousePos;
+        private Point currentMousePos;
+        private bool bDrawing = false;
+
+        private void ImagePictureBox_MouseDown(object sender, MouseEventArgs e)
+        {
+            bDrawing = true;
+
+            this.initialMousePos = e.Location;
+        }
+
+        private void ImagePictureBox_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!bDrawing)
+                return;
+
+            // Save the final position of the mouse
+            Point finalMousePos = e.Location;
+
+            // Create the rectangle from the two points
+            Rectangle drawnRect = Rectangle.FromLTRB(
+                                                     this.initialMousePos.X,
+                                                     this.initialMousePos.Y,
+                                                     finalMousePos.X,
+                                                     finalMousePos.Y);
+
+            // Do whatever you want with the rectangle here
+            // ...
+            bDrawing = false;
+        }
+
+        private void ImagePictureBox_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (!bDrawing)
+                return;
+
+            // Save the current position of the mouse
+            currentMousePos = e.Location;
+
+            // Force the picture box to be repainted
+            ImagePictureBox.Invalidate();
+        }
+
+        private void ImagePictureBox_Paint(object sender, PaintEventArgs e)
+        {
+            if (!bDrawing)
+                return;
+
+            // Create a pen object that we'll use to draw
+            // (change these parameters to make it any color and size you want)
+            using (Pen p = new Pen(Color.Red, 1.0F))
+            {
+                // Create a rectangle with the initial cursor location as the upper-left
+                // point, and the current cursor location as the bottom-right point
+                Rectangle currentRect = Rectangle.FromLTRB(
+                                                           this.initialMousePos.X,
+                                                           this.initialMousePos.Y,
+                                                           currentMousePos.X,
+                                                           currentMousePos.Y);
+
+                // Draw the rectangle
+                e.Graphics.DrawRectangle(p, currentRect);
+            }
+        }
+
+        private void ImageNameLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            OpenFileDialog openFileDlg = new OpenFileDialog();
+            openFileDlg.Filter = "Images (*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG|All files (*.*)|*.*";
+            if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                ImagePictureBox.Load(openFileDlg.FileName);
+                ImageNameLabel.Text = Path.GetFileName(openFileDlg.FileName);
+            }
+
+        }
+
+        private void MarkSolutionButton_Click(object sender, EventArgs e)
+        {
+            ImagePictureBox.Invalidate();
         }
     }
 }
