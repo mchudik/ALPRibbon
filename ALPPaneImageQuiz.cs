@@ -159,11 +159,13 @@ namespace ALPRibbon
         private Point initialMousePos;
         private Point currentMousePos;
         private bool bDrawing = false;
+        private bool bMarked = false;
+        private Rectangle solutionRect;
 
         private void ImagePictureBox_MouseDown(object sender, MouseEventArgs e)
         {
             bDrawing = true;
-
+            bMarked = false;
             this.initialMousePos = e.Location;
         }
 
@@ -176,11 +178,11 @@ namespace ALPRibbon
             Point finalMousePos = e.Location;
 
             // Create the rectangle from the two points
-            Rectangle drawnRect = Rectangle.FromLTRB(
-                                                     this.initialMousePos.X,
-                                                     this.initialMousePos.Y,
-                                                     finalMousePos.X,
-                                                     finalMousePos.Y);
+            solutionRect = Rectangle.FromLTRB(
+                                                this.initialMousePos.X,
+                                                this.initialMousePos.Y,
+                                                finalMousePos.X,
+                                                finalMousePos.Y);
 
             // Do whatever you want with the rectangle here
             // ...
@@ -201,23 +203,34 @@ namespace ALPRibbon
 
         private void ImagePictureBox_Paint(object sender, PaintEventArgs e)
         {
-            if (!bDrawing)
-                return;
-
-            // Create a pen object that we'll use to draw
-            // (change these parameters to make it any color and size you want)
-            using (Pen p = new Pen(Color.Red, 1.0F))
+            if (bDrawing)
             {
-                // Create a rectangle with the initial cursor location as the upper-left
-                // point, and the current cursor location as the bottom-right point
-                Rectangle currentRect = Rectangle.FromLTRB(
-                                                           this.initialMousePos.X,
-                                                           this.initialMousePos.Y,
-                                                           currentMousePos.X,
-                                                           currentMousePos.Y);
+                // Create a pen object that we'll use to draw
+                // (change these parameters to make it any color and size you want)
+                using (Pen p = new Pen(Color.Red, 2.0F))
+                {
+                    // Create a rectangle with the initial cursor location as the upper-left
+                    // point, and the current cursor location as the bottom-right point
+                    Rectangle currentRect = Rectangle.FromLTRB(
+                                                               this.initialMousePos.X,
+                                                               this.initialMousePos.Y,
+                                                               currentMousePos.X,
+                                                               currentMousePos.Y);
 
-                // Draw the rectangle
-                e.Graphics.DrawRectangle(p, currentRect);
+                    // Draw the rectangle
+                    e.Graphics.DrawRectangle(p, currentRect);
+                }
+            }
+            else
+            {
+                if (bMarked == true)
+                {
+                    using (Pen p = new Pen(Color.Green, 2.0F))
+                    {
+                        // Draw the rectangle
+                        e.Graphics.DrawRectangle(p, solutionRect);
+                    }
+                }
             }
         }
 
@@ -235,6 +248,7 @@ namespace ALPRibbon
 
         private void MarkSolutionButton_Click(object sender, EventArgs e)
         {
+            bMarked = true;
             ImagePictureBox.Invalidate();
         }
     }

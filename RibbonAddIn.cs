@@ -132,11 +132,11 @@ namespace ALPRibbon
             ALPPaneMultipleChoiceTaskPane.VisibleChanged += new EventHandler(ALPPaneMultipleChoiceTaskPane_VisibleChanged);
             // Set default for floating view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneMultipleChoiceTaskPane.Width = 400;
+            ALPPaneMultipleChoiceTaskPane.Width = 500;
             ALPPaneMultipleChoiceTaskPane.Height = 600;
             // Set default for docked view    
             ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneMultipleChoiceTaskPane.Width = 400;
+            ALPPaneMultipleChoiceTaskPane.Width = 300;
             // Set docking restrictions
             ALPPaneMultipleChoiceTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
@@ -146,11 +146,11 @@ namespace ALPRibbon
             ALPPaneImageQuizTaskPane.VisibleChanged += new EventHandler(ALPPaneImageQuizTaskPane_VisibleChanged);
             // Set default for floating view    
             ALPPaneImageQuizTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneImageQuizTaskPane.Width = 400;
-            ALPPaneImageQuizTaskPane.Height = 600;
+            ALPPaneImageQuizTaskPane.Width = 700;
+            ALPPaneImageQuizTaskPane.Height = 900;
             // Set default for docked view    
             ALPPaneImageQuizTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneImageQuizTaskPane.Width = 400;
+            ALPPaneImageQuizTaskPane.Width = 300;
             // Set docking restrictions
             ALPPaneImageQuizTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
@@ -160,11 +160,11 @@ namespace ALPRibbon
             ALPPaneFreeResponseTaskPane.VisibleChanged += new EventHandler(ALPPaneFreeResponseTaskPane_VisibleChanged);
             // Set default for floating view    
             ALPPaneFreeResponseTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneFreeResponseTaskPane.Width = 400;
+            ALPPaneFreeResponseTaskPane.Width = 500;
             ALPPaneFreeResponseTaskPane.Height = 600;
             // Set default for docked view    
             ALPPaneFreeResponseTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneFreeResponseTaskPane.Width = 400;
+            ALPPaneFreeResponseTaskPane.Width = 300;
             // Set docking restrictions
             ALPPaneFreeResponseTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 

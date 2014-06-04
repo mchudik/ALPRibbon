@@ -37,10 +37,9 @@
             this.AnswerDescTextBox = new System.Windows.Forms.TextBox();
             this.JustificationDescTextBox = new System.Windows.Forms.TextBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.Bullet = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubmitButton = new System.Windows.Forms.Button();
             this.Correct = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Answer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SubmitButton = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -130,7 +129,6 @@
             // 
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.Bullet,
             this.Correct,
             this.Answer});
             this.dataGridView.Location = new System.Drawing.Point(21, 151);
@@ -139,13 +137,15 @@
             this.dataGridView.Size = new System.Drawing.Size(578, 172);
             this.dataGridView.TabIndex = 19;
             // 
-            // Bullet
+            // SubmitButton
             // 
-            this.Bullet.DividerWidth = 10;
-            this.Bullet.HeaderText = "";
-            this.Bullet.MinimumWidth = 40;
-            this.Bullet.Name = "Bullet";
-            this.Bullet.Width = 40;
+            this.SubmitButton.Location = new System.Drawing.Point(21, 471);
+            this.SubmitButton.Name = "SubmitButton";
+            this.SubmitButton.Size = new System.Drawing.Size(578, 29);
+            this.SubmitButton.TabIndex = 20;
+            this.SubmitButton.Text = "Submit";
+            this.SubmitButton.UseVisualStyleBackColor = true;
+            this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
             // Correct
             // 
@@ -160,16 +160,6 @@
             this.Answer.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.Answer.HeaderText = "Answer";
             this.Answer.Name = "Answer";
-            // 
-            // SubmitButton
-            // 
-            this.SubmitButton.Location = new System.Drawing.Point(21, 471);
-            this.SubmitButton.Name = "SubmitButton";
-            this.SubmitButton.Size = new System.Drawing.Size(578, 29);
-            this.SubmitButton.TabIndex = 20;
-            this.SubmitButton.Text = "Submit";
-            this.SubmitButton.UseVisualStyleBackColor = true;
-            this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
             // ALPPaneMultipleChoice
             // 
@@ -207,7 +197,6 @@
         private System.Windows.Forms.TextBox JustificationDescTextBox;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button SubmitButton;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Bullet;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Correct;
         private System.Windows.Forms.DataGridViewTextBoxColumn Answer;
     }

@@ -279,16 +279,14 @@ namespace ALPRibbon
                 foreach (DataGridViewRow row in dataGridView.Rows)
                 {
                     if (row.IsNewRow) break;
-                    if (row.Cells[2].Value == null) continue;   //No text in answer
+                    if (row.Cells[1].Value == null) continue;   //No text in answer
 
                     xmlTextWriter.WriteStartElement("answer");
                     if (row.Cells[0].Value != null)
-                        xmlTextWriter.WriteAttributeString("bullet", row.Cells[0].Value.ToString());
-                    if (row.Cells[1].Value != null)
-                        xmlTextWriter.WriteAttributeString("correct", row.Cells[1].Value.ToString());
+                        xmlTextWriter.WriteAttributeString("correct", row.Cells[0].Value.ToString());
                     else
                         xmlTextWriter.WriteAttributeString("correct", "False");
-                    xmlTextWriter.WriteAttributeString("text", row.Cells[2].Value.ToString());
+                    xmlTextWriter.WriteAttributeString("text", row.Cells[1].Value.ToString());
                     xmlTextWriter.WriteEndElement();  //answer
                 }
 
@@ -354,9 +352,8 @@ namespace ALPRibbon
                         if (xmlTextReader.Name == "answer")
                         {
                             dataGridView.Rows.Add();
-                            dataGridView.Rows[nRows].Cells[0].Value = xmlTextReader.GetAttribute("bullet");
-                            dataGridView.Rows[nRows].Cells[1].Value = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("correct").ToLower());
-                            dataGridView.Rows[nRows].Cells[2].Value = xmlTextReader.GetAttribute("text");
+                            dataGridView.Rows[nRows].Cells[0].Value = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("correct").ToLower());
+                            dataGridView.Rows[nRows].Cells[1].Value = xmlTextReader.GetAttribute("text");
                             nRows++;
                         }
                         if (xmlTextReader.Name == "justification")
