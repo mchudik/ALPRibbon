@@ -36,12 +36,12 @@
             this.AddJustificationCheckBox = new System.Windows.Forms.CheckBox();
             this.AnswerDescTextBox = new System.Windows.Forms.TextBox();
             this.JustificationDescTextBox = new System.Windows.Forms.TextBox();
-            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.Bullet = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Correct = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Answer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.SubmitButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
             // QuestionLabel
@@ -126,18 +126,18 @@
             this.JustificationDescTextBox.TabIndex = 10;
             this.JustificationDescTextBox.Text = "Check this box to ask students to add a follow up free response.";
             // 
-            // dataGridView1
+            // dataGridView
             // 
-            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Bullet,
             this.Correct,
             this.Answer});
-            this.dataGridView1.Location = new System.Drawing.Point(21, 151);
-            this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.RowTemplate.Height = 24;
-            this.dataGridView1.Size = new System.Drawing.Size(578, 172);
-            this.dataGridView1.TabIndex = 19;
+            this.dataGridView.Location = new System.Drawing.Point(21, 151);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowTemplate.Height = 24;
+            this.dataGridView.Size = new System.Drawing.Size(578, 172);
+            this.dataGridView.TabIndex = 19;
             // 
             // Bullet
             // 
@@ -177,7 +177,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
             this.Controls.Add(this.SubmitButton);
-            this.Controls.Add(this.dataGridView1);
+            this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.JustificationDescTextBox);
             this.Controls.Add(this.AnswerDescTextBox);
             this.Controls.Add(this.AddJustificationCheckBox);
@@ -189,7 +189,7 @@
             this.Name = "ALPPaneMultipleChoice";
             this.Size = new System.Drawing.Size(602, 526);
             this.Resize += new System.EventHandler(this.OnResize);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -205,7 +205,7 @@
         private System.Windows.Forms.CheckBox AddJustificationCheckBox;
         private System.Windows.Forms.TextBox AnswerDescTextBox;
         private System.Windows.Forms.TextBox JustificationDescTextBox;
-        private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button SubmitButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn Bullet;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Correct;

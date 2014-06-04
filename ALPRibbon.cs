@@ -49,5 +49,10 @@ namespace ALPRibbon
         {
             Globals.RibbonAddIn.ALPImageQuizTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
         }
+
+        private void FreeResponseButton_Click(object sender, RibbonControlEventArgs e)
+        {
+            Globals.RibbonAddIn.ALPImageFreeResponsePane.Visible = ((RibbonToggleButton)sender).Checked;
+        }
     }
 }

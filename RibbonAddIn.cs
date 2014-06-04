@@ -57,6 +57,13 @@ namespace ALPRibbon
                 return ALPPaneImageQuizTaskPane;
             }
         }
+        public Microsoft.Office.Tools.CustomTaskPane ALPImageFreeResponsePane
+        {
+            get
+            {
+                return ALPPaneFreeResponseTaskPane;
+            }
+        }
 
 
         // Custom Pane Controls
@@ -68,6 +75,8 @@ namespace ALPRibbon
         private Microsoft.Office.Tools.CustomTaskPane ALPPaneMultipleChoiceTaskPane;
         private ALPPaneImageQuiz ALPPaneImageQuizControl;
         private Microsoft.Office.Tools.CustomTaskPane ALPPaneImageQuizTaskPane;
+        private ALPPaneFreeResponse ALPPaneFreeResponseControl;
+        private Microsoft.Office.Tools.CustomTaskPane ALPPaneFreeResponseTaskPane;
 
         // Event Handlers
         private void RibbonAddIn_Startup(object sender, System.EventArgs e)
@@ -145,6 +154,20 @@ namespace ALPRibbon
             // Set docking restrictions
             ALPPaneImageQuizTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
 
+            // FreeResponse Custom Pane
+            ALPPaneFreeResponseControl = new ALPPaneFreeResponse();
+            ALPPaneFreeResponseTaskPane = this.CustomTaskPanes.Add(ALPPaneFreeResponseControl, "Free Response");
+            ALPPaneFreeResponseTaskPane.VisibleChanged += new EventHandler(ALPPaneFreeResponseTaskPane_VisibleChanged);
+            // Set default for floating view    
+            ALPPaneFreeResponseTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
+            ALPPaneFreeResponseTaskPane.Width = 400;
+            ALPPaneFreeResponseTaskPane.Height = 600;
+            // Set default for docked view    
+            ALPPaneFreeResponseTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
+            ALPPaneFreeResponseTaskPane.Width = 400;
+            // Set docking restrictions
+            ALPPaneFreeResponseTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
+
         }
 
         private void RibbonAddIn_Shutdown(object sender, System.EventArgs e)
@@ -163,6 +186,10 @@ namespace ALPRibbon
             if (Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked)
             {
                 Globals.RibbonAddIn.ALPPaneImageQuizControl.OnInitialize();
+            }
+            if (Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked)
+            {
+                Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnInitialize();
             }
         }
 
@@ -255,6 +282,19 @@ namespace ALPRibbon
             else
             {
                 Globals.RibbonAddIn.ALPPaneImageQuizControl.OnExit();
+            }
+        }
+
+        private void ALPPaneFreeResponseTaskPane_VisibleChanged(object sender, System.EventArgs e)
+        {
+            Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = ALPPaneFreeResponseTaskPane.Visible;
+            if (Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked)
+            {
+                Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnInitialize();
+            }
+            else
+            {
+                Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnExit();
             }
         }
 

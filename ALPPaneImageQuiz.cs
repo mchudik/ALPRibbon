@@ -69,7 +69,7 @@ namespace ALPRibbon
 
             // Dynamic Height Calculation
             ImagePictureBox.Height = this.Height - ImagePictureBox.Top - 169;
-            if (ImagePictureBox.Height < 40) ImagePictureBox.Height = 50;
+            if (ImagePictureBox.Height < 50) ImagePictureBox.Height = 50;
             int PaddedHeight = ImagePictureBox.Top + ImagePictureBox.Height;
             AddJustificationCheckBox.Top = PaddedHeight + 10;
             JustificationDescTextBox.Top = PaddedHeight + 33;

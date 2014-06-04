@@ -167,6 +167,7 @@
             this.FreeResponseButton.SuperTip = "When an instructor decides to create a free response question, a new slide is cre" +
     "ated that allows them to ask a question that requires their students to respond " +
     "freely.";
+            this.FreeResponseButton.Click += new Microsoft.Office.Tools.Ribbon.RibbonControlEventHandler(this.FreeResponseButton_Click);
             // 
             // Sources
             // 
