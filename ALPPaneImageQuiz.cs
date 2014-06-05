@@ -31,14 +31,22 @@ namespace ALPRibbon
                 // Remove XML Placeholder shapes for this poll
                 foreach (PowerPoint.Shape shape in oSlide.Shapes)
                 {
-                    if (shape.AlternativeText.Equals("ImageQuizPoll"))
+                    if (shape.AlternativeText.Equals("ImageQuizPollXML"))
+                    {
+                        shape.Delete();
+                    }
+                }
+                // Remove Image Placeholder shapes for this poll
+                foreach (PowerPoint.Shape shape in oSlide.Shapes)
+                {
+                    if (shape.AlternativeText.Equals("ImageQuizPollImage"))
                     {
                         shape.Delete();
                     }
                 }
 
                 // Add XML Placeholder shape for this poll
-                string textXML = "";// ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
@@ -50,7 +58,15 @@ namespace ALPRibbon
                 oShapeText.Top = 0;
                 if (Globals.RibbonAddIn.bDebug == false)
                     oShapeText.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
-                oShapeText.AlternativeText = "ImageQuizPoll";
+                oShapeText.AlternativeText = "ImageQuizPollXML";
+
+                // Add Placeholder shape for image of this poll
+                PowerPoint.Shape oShapePicture = oShapes.AddPicture(ImagePictureBox.ImageLocation, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0);
+                oShapePicture.Left = 0;
+                oShapePicture.Top = 0;
+                if (Globals.RibbonAddIn.bDebug == false)
+                    oShapePicture.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                oShapePicture.AlternativeText = "ImageQuizPollImage";
             }
             catch (Exception ex)
             {
@@ -106,9 +122,13 @@ namespace ALPRibbon
                 // Read XML Placeholder shape for this poll
                 foreach (PowerPoint.Shape shape in oSlide.Shapes)
                 {
-                    if (shape.AlternativeText.Equals("ImageQuizPoll"))
+                    if (shape.AlternativeText.Equals("ImageQuizPollXML"))
                     {
-//                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                        ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                    }
+                    if (shape.AlternativeText.Equals("ImageQuizPollImage"))
+                    {
+                        //                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
                     }
                 }
             }
@@ -129,12 +149,33 @@ namespace ALPRibbon
                     // Clear all UI variables
                     ResetVariables();
                     PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
-                    // Remove XML Placeholder shape for this poll
+                    
+                    bool bRemovePoll = false;
+                    // Check if remove Placeholder shapes for this poll
                     foreach (PowerPoint.Shape shape in oSlide.Shapes)
                     {
-                        if (shape.AlternativeText.Equals("ImageQuizPoll"))
+                        if (shape.AlternativeText.Equals("ImageQuizPollXML") || shape.AlternativeText.Equals("ImageQuizPollImage"))
                         {
                             if (MessageBox.Show("Remove Poll from current slide?", "Multiple Choice", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            {
+                                bRemovePoll = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(bRemovePoll == true) {
+                        // Remove XML Placeholder shape for this poll
+                        foreach (PowerPoint.Shape shape in oSlide.Shapes)
+                        {
+                            if (shape.AlternativeText.Equals("ImageQuizPollXML"))
+                            {
+                                shape.Delete();
+                            }
+                        }
+                        // Remove Image Placeholder shape for this poll
+                        foreach (PowerPoint.Shape shape in oSlide.Shapes)
+                        {
+                            if (shape.AlternativeText.Equals("ImageQuizPollImage"))
                             {
                                 shape.Delete();
                             }

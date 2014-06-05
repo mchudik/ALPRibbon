@@ -369,5 +369,101 @@ namespace ALPRibbon
                 MessageBox.Show(e.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        public static string WriteImageQuizXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            using (var ms = new MemoryStream())
+            using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
+            {
+                WriteImageQuizXML(xmlString, oPres, CurentSlideId, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                return System.Text.Encoding.UTF8.GetString(ms.ToArray());
+            }
+        }
+
+        public static void WriteImageQuizXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            try
+            {
+                //Write the XML delcaration. 
+                xmlTextWriter.WriteStartDocument();
+
+                //Use indentation for readability.
+                xmlTextWriter.Formatting = Formatting.Indented;
+
+                xmlTextWriter.WriteStartElement("poll");
+                //                xmlTextWriter.WriteAttributeString("slide_index", "" + CurentSlideId + "");
+                xmlTextWriter.WriteAttributeString("type", "image_quiz");
+
+                xmlTextWriter.WriteStartElement("question");
+                xmlTextWriter.WriteAttributeString("text", QuestionTextBox.Text);
+                xmlTextWriter.WriteEndElement();  //question
+
+                xmlTextWriter.WriteStartElement("description");
+                xmlTextWriter.WriteAttributeString("text", DescriptionTextBox.Text);
+                xmlTextWriter.WriteEndElement();  //description
+
+                xmlTextWriter.WriteStartElement("justification");
+                xmlTextWriter.WriteAttributeString("text", JustificationTextBox.Text);
+                xmlTextWriter.WriteAttributeString("required", AddJustificationCheckBox.Checked.ToString());
+                xmlTextWriter.WriteEndElement();  //justification
+
+                xmlTextWriter.WriteEndElement();  //poll
+
+                // Write the XML to file and close the xmlFile.
+                xmlTextWriter.Flush();
+                xmlTextWriter.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public static void ReadImageQuizXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
+            using (XmlTextReader xmlString = new XmlTextReader(ms))
+            {
+                ReadImageQuizXML(xmlString, CurentSlideId, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
+            }
+        }
+
+        public static void ReadImageQuizXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        {
+            try
+            {
+                //  Loop over the XML file
+                while (xmlTextReader.Read())
+                {
+                    //  Here we check the type of the node, in this case we are looking for element
+                    if (xmlTextReader.NodeType == XmlNodeType.Element)
+                    {
+                        if (xmlTextReader.Name == "poll")
+                        {
+                            //                            Debug.WriteLine(xmlTextReader.GetAttribute("slide_index"));
+                            //                            Debug.WriteLine(xmlTextReader.GetAttribute("type"));
+                        }
+                        if (xmlTextReader.Name == "question")
+                        {
+                            QuestionTextBox.Text = xmlTextReader.GetAttribute("text");
+                        }
+                        if (xmlTextReader.Name == "description")
+                        {
+                            DescriptionTextBox.Text = xmlTextReader.GetAttribute("text");
+                        }
+                        if (xmlTextReader.Name == "justification")
+                        {
+                            JustificationTextBox.Text = xmlTextReader.GetAttribute("text");
+                            AddJustificationCheckBox.Checked = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("required").ToLower());
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
     }
 }
