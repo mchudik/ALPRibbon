@@ -228,6 +228,52 @@ namespace ALPRibbon
             oShape.TextFrame.TextRange.InsertAfter(text);
         }
 
+        public static PowerPoint.Slide GetOrInsertPlaceholderSlide(string strSlideType)
+        {
+            try
+            {
+                PowerPoint.Application oApp = Globals.RibbonAddIn.Application;
+                PowerPoint.Presentation oPres = oApp.ActivePresentation;
+                PowerPoint.PpSlideLayout oLayout = PowerPoint.PpSlideLayout.ppLayoutBlank;
+                PowerPoint.View oView = oApp.ActiveWindow.View;
+                PowerPoint.Slide oSlide = oPres.Slides[RibbonAddIn.ALPCurrentSlide];
+
+                if (!oSlide.Name.Contains(strSlideType))
+                {
+                    // Insert Slide after the current slide and select it
+                    PowerPoint.Slide oSlideNew = oPres.Slides.Add(RibbonAddIn.ALPCurrentSlide + 1, oLayout);
+                    oView.GotoSlide(oSlideNew.SlideIndex);
+                    oSlideNew.Name = strSlideType + "_" + oSlideNew.Name;
+                    oSlide = oSlideNew;
+                }
+                return oSlide;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+        }
+
+        public static void RemoveShapeFromSlide(PowerPoint.Slide oSlide, string shapeAltText)
+        {
+            try
+            {
+                // Remove all shapes with this name from this poll
+                foreach (PowerPoint.Shape shape in oSlide.Shapes)
+                {
+                    if (shape.AlternativeText.Equals(shapeAltText))
+                    {
+                        shape.Delete();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         public static string WriteMultiQuestionXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             using (var ms = new MemoryStream())
@@ -370,17 +416,17 @@ namespace ALPRibbon
             }
         }
 
-        public static string WriteImageQuizXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static string WriteImageQuizXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             using (var ms = new MemoryStream())
             using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
             {
-                WriteImageQuizXML(xmlString, oPres, CurentSlideId, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                WriteImageQuizXML(xmlString, oPres, CurentSlideId, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
                 return System.Text.Encoding.UTF8.GetString(ms.ToArray());
             }
         }
 
-        public static void WriteImageQuizXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void WriteImageQuizXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             try
             {
@@ -397,10 +443,6 @@ namespace ALPRibbon
                 xmlTextWriter.WriteStartElement("question");
                 xmlTextWriter.WriteAttributeString("text", QuestionTextBox.Text);
                 xmlTextWriter.WriteEndElement();  //question
-
-                xmlTextWriter.WriteStartElement("description");
-                xmlTextWriter.WriteAttributeString("text", DescriptionTextBox.Text);
-                xmlTextWriter.WriteEndElement();  //description
 
                 xmlTextWriter.WriteStartElement("justification");
                 xmlTextWriter.WriteAttributeString("text", JustificationTextBox.Text);
@@ -419,16 +461,16 @@ namespace ALPRibbon
             }
         }
 
-        public static void ReadImageQuizXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadImageQuizXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
             using (XmlTextReader xmlString = new XmlTextReader(ms))
             {
-                ReadImageQuizXML(xmlString, CurentSlideId, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                ReadImageQuizXML(xmlString, CurentSlideId, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
             }
         }
 
-        public static void ReadImageQuizXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, TextBox DescriptionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadImageQuizXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             try
             {
@@ -447,14 +489,87 @@ namespace ALPRibbon
                         {
                             QuestionTextBox.Text = xmlTextReader.GetAttribute("text");
                         }
-                        if (xmlTextReader.Name == "description")
-                        {
-                            DescriptionTextBox.Text = xmlTextReader.GetAttribute("text");
-                        }
                         if (xmlTextReader.Name == "justification")
                         {
                             JustificationTextBox.Text = xmlTextReader.GetAttribute("text");
                             AddJustificationCheckBox.Checked = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("required").ToLower());
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public static string WriteFreeResponseXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox)
+        {
+            using (var ms = new MemoryStream())
+            using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
+            {
+                WriteFreeResponseXML(xmlString, oPres, CurentSlideId, QuestionTextBox);
+                return System.Text.Encoding.UTF8.GetString(ms.ToArray());
+            }
+        }
+
+        public static void WriteFreeResponseXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox)
+        {
+            try
+            {
+                //Write the XML delcaration. 
+                xmlTextWriter.WriteStartDocument();
+
+                //Use indentation for readability.
+                xmlTextWriter.Formatting = Formatting.Indented;
+
+                xmlTextWriter.WriteStartElement("poll");
+                //                xmlTextWriter.WriteAttributeString("slide_index", "" + CurentSlideId + "");
+                xmlTextWriter.WriteAttributeString("type", "free_response");
+
+                xmlTextWriter.WriteStartElement("question");
+                xmlTextWriter.WriteAttributeString("text", QuestionTextBox.Text);
+                xmlTextWriter.WriteEndElement();  //question
+
+                xmlTextWriter.WriteEndElement();  //poll
+
+                // Write the XML to file and close the xmlFile.
+                xmlTextWriter.Flush();
+                xmlTextWriter.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        public static void ReadFreeResponseXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox)
+        {
+            using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
+            using (XmlTextReader xmlString = new XmlTextReader(ms))
+            {
+                ReadFreeResponseXML(xmlString, CurentSlideId, QuestionTextBox);
+            }
+        }
+
+        public static void ReadFreeResponseXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox)
+        {
+            try
+            {
+                //  Loop over the XML file
+                while (xmlTextReader.Read())
+                {
+                    //  Here we check the type of the node, in this case we are looking for element
+                    if (xmlTextReader.NodeType == XmlNodeType.Element)
+                    {
+                        if (xmlTextReader.Name == "poll")
+                        {
+                            //                            Debug.WriteLine(xmlTextReader.GetAttribute("slide_index"));
+                            //                            Debug.WriteLine(xmlTextReader.GetAttribute("type"));
+                        }
+                        if (xmlTextReader.Name == "question")
+                        {
+                            QuestionTextBox.Text = xmlTextReader.GetAttribute("text");
                         }
                     }
                 }

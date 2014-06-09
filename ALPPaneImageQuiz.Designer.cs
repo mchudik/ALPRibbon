@@ -30,12 +30,10 @@
         {
             this.QuestionLabel = new System.Windows.Forms.Label();
             this.QuestionTextBox = new System.Windows.Forms.TextBox();
-            this.DescriptionLabel = new System.Windows.Forms.Label();
             this.JustificationTextBox = new System.Windows.Forms.TextBox();
             this.AddJustificationCheckBox = new System.Windows.Forms.CheckBox();
             this.JustificationDescTextBox = new System.Windows.Forms.TextBox();
             this.SubmitButton = new System.Windows.Forms.Button();
-            this.DescriptionTextBox = new System.Windows.Forms.TextBox();
             this.ImagePictureBox = new System.Windows.Forms.PictureBox();
             this.ImageLabel = new System.Windows.Forms.Label();
             this.ImageNameLabel = new System.Windows.Forms.LinkLabel();
@@ -61,16 +59,6 @@
             this.QuestionTextBox.Size = new System.Drawing.Size(578, 40);
             this.QuestionTextBox.TabIndex = 4;
             this.QuestionTextBox.Text = "Define Question";
-            // 
-            // DescriptionLabel
-            // 
-            this.DescriptionLabel.AutoSize = true;
-            this.DescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DescriptionLabel.Location = new System.Drawing.Point(18, 85);
-            this.DescriptionLabel.Name = "DescriptionLabel";
-            this.DescriptionLabel.Size = new System.Drawing.Size(152, 18);
-            this.DescriptionLabel.TabIndex = 5;
-            this.DescriptionLabel.Text = "Description (Optional)";
             // 
             // JustificationTextBox
             // 
@@ -113,20 +101,12 @@
             this.SubmitButton.UseVisualStyleBackColor = true;
             this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
-            // DescriptionTextBox
-            // 
-            this.DescriptionTextBox.Location = new System.Drawing.Point(21, 110);
-            this.DescriptionTextBox.Multiline = true;
-            this.DescriptionTextBox.Name = "DescriptionTextBox";
-            this.DescriptionTextBox.Size = new System.Drawing.Size(578, 40);
-            this.DescriptionTextBox.TabIndex = 5;
-            // 
             // ImagePictureBox
             // 
             this.ImagePictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.ImagePictureBox.Location = new System.Drawing.Point(21, 180);
+            this.ImagePictureBox.Location = new System.Drawing.Point(21, 110);
             this.ImagePictureBox.Name = "ImagePictureBox";
-            this.ImagePictureBox.Size = new System.Drawing.Size(578, 177);
+            this.ImagePictureBox.Size = new System.Drawing.Size(578, 251);
             this.ImagePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.ImagePictureBox.TabIndex = 21;
             this.ImagePictureBox.TabStop = false;
@@ -140,7 +120,7 @@
             // 
             this.ImageLabel.AutoSize = true;
             this.ImageLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ImageLabel.Location = new System.Drawing.Point(21, 158);
+            this.ImageLabel.Location = new System.Drawing.Point(18, 85);
             this.ImageLabel.Name = "ImageLabel";
             this.ImageLabel.Size = new System.Drawing.Size(48, 18);
             this.ImageLabel.TabIndex = 22;
@@ -150,7 +130,7 @@
             // 
             this.ImageNameLabel.AutoSize = true;
             this.ImageNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ImageNameLabel.Location = new System.Drawing.Point(92, 158);
+            this.ImageNameLabel.Location = new System.Drawing.Point(92, 85);
             this.ImageNameLabel.Name = "ImageNameLabel";
             this.ImageNameLabel.Size = new System.Drawing.Size(108, 18);
             this.ImageNameLabel.TabIndex = 23;
@@ -177,12 +157,10 @@
             this.Controls.Add(this.ImageNameLabel);
             this.Controls.Add(this.ImageLabel);
             this.Controls.Add(this.ImagePictureBox);
-            this.Controls.Add(this.DescriptionTextBox);
             this.Controls.Add(this.SubmitButton);
             this.Controls.Add(this.JustificationDescTextBox);
             this.Controls.Add(this.AddJustificationCheckBox);
             this.Controls.Add(this.JustificationTextBox);
-            this.Controls.Add(this.DescriptionLabel);
             this.Controls.Add(this.QuestionTextBox);
             this.Controls.Add(this.QuestionLabel);
             this.Name = "ALPPaneImageQuiz";
@@ -198,12 +176,10 @@
 
         private System.Windows.Forms.Label QuestionLabel;
         private System.Windows.Forms.TextBox QuestionTextBox;
-        private System.Windows.Forms.Label DescriptionLabel;
         private System.Windows.Forms.TextBox JustificationTextBox;
         private System.Windows.Forms.CheckBox AddJustificationCheckBox;
         private System.Windows.Forms.TextBox JustificationDescTextBox;
         private System.Windows.Forms.Button SubmitButton;
-        private System.Windows.Forms.TextBox DescriptionTextBox;
         private System.Windows.Forms.PictureBox ImagePictureBox;
         private System.Windows.Forms.Label ImageLabel;
         private System.Windows.Forms.LinkLabel ImageNameLabel;

@@ -46,7 +46,7 @@ namespace ALPRibbon
                 }
 
                 // Add XML Placeholder shape for this poll
-                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
@@ -61,12 +61,15 @@ namespace ALPRibbon
                 oShapeText.AlternativeText = "ImageQuizPollXML";
 
                 // Add Placeholder shape for image of this poll
-                PowerPoint.Shape oShapePicture = oShapes.AddPicture(ImagePictureBox.ImageLocation, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0);
-                oShapePicture.Left = 0;
-                oShapePicture.Top = 0;
-                if (Globals.RibbonAddIn.bDebug == false)
-                    oShapePicture.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
-                oShapePicture.AlternativeText = "ImageQuizPollImage";
+                if (ImagePictureBox.ImageLocation != null)
+                {
+                    PowerPoint.Shape oShapePicture = oShapes.AddPicture(ImagePictureBox.ImageLocation, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoFalse, 0, 0);
+                    oShapePicture.Left = 0;
+                    oShapePicture.Top = 0;
+                    if (Globals.RibbonAddIn.bDebug == false)
+                        oShapePicture.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                    oShapePicture.AlternativeText = "ImageQuizPollImage";
+                }
             }
             catch (Exception ex)
             {
@@ -83,7 +86,6 @@ namespace ALPRibbon
             JustificationTextBox.Width = PaddedWidth;
             MarkSolutionButton.Width = PaddedWidth;
             SubmitButton.Width = PaddedWidth;
-            DescriptionTextBox.Width = PaddedWidth;
 
             // Dynamic Height Calculation
             ImagePictureBox.Height = this.Height - ImagePictureBox.Top - 214;
@@ -101,11 +103,7 @@ namespace ALPRibbon
             QuestionTextBox.Text = "";
             JustificationTextBox.Text = "";
             AddJustificationCheckBox.Checked = false;
-            DescriptionTextBox.Text = "";
-//            while (dataGridView1.Rows.Count > 1)
-            {
-//                dataGridView1.Rows.RemoveAt(0);
-            }
+            ImagePictureBox.Image = null;
         }
 
         public void OnInitialize()
@@ -124,11 +122,12 @@ namespace ALPRibbon
                 {
                     if (shape.AlternativeText.Equals("ImageQuizPollXML"))
                     {
-                        ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, DescriptionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                        ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
                     }
                     if (shape.AlternativeText.Equals("ImageQuizPollImage"))
                     {
-                        //                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                        ImagePictureBox.Load(shape.LinkFormat.SourceFullName);
+                        ImageNameLabel.Text = Path.GetFileName(shape.LinkFormat.SourceFullName);
                     }
                 }
             }
@@ -156,7 +155,7 @@ namespace ALPRibbon
                     {
                         if (shape.AlternativeText.Equals("ImageQuizPollXML") || shape.AlternativeText.Equals("ImageQuizPollImage"))
                         {
-                            if (MessageBox.Show("Remove Poll from current slide?", "Multiple Choice", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (MessageBox.Show("Remove Poll from current slide?", "Image Quiz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 bRemovePoll = true;
                                 break;

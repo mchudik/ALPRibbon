@@ -30,14 +30,14 @@ namespace ALPRibbon
                 // Remove XML Placeholder shapes for this poll
                 foreach (PowerPoint.Shape shape in oSlide.Shapes)
                 {
-                    if (shape.AlternativeText.Equals("FreeResponsePoll"))
+                    if (shape.AlternativeText.Equals("FreeResponsePollXML"))
                     {
                         shape.Delete();
                     }
                 }
 
                 // Add XML Placeholder shape for this poll
-                string textXML = "";// ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                string textXML = ALPPowerpointUtils.WriteFreeResponseXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
@@ -49,7 +49,7 @@ namespace ALPRibbon
                 oShapeText.Top = 0;
                 if (Globals.RibbonAddIn.bDebug == false)
                     oShapeText.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
-                oShapeText.AlternativeText = "FreeResponsePoll";
+                oShapeText.AlternativeText = "FreeResponsePollXML";
             }
             catch (Exception ex)
             {
@@ -63,23 +63,14 @@ namespace ALPRibbon
             int PaddedWidth = this.Width - 40;
             QuestionTextBox.Width = PaddedWidth;
             SubmitButton.Width = PaddedWidth;
-            ResponseTextBox.Width = PaddedWidth;
 
             // Dynamic Height Calculation
-            ResponseTextBox.Height = this.Height - ResponseTextBox.Top - 67;
-            if (ResponseTextBox.Height < 40) ResponseTextBox.Height = 40;
-            int PaddedHeight = ResponseTextBox.Top + ResponseTextBox.Height;
-            SubmitButton.Top = PaddedHeight + 16;
+            SubmitButton.Top = this.Height - 51;
         }
 
         private void ResetVariables()
         {
             QuestionTextBox.Text = "";
-            ResponseTextBox.Text = "";
-//            while (dataGridView1.Rows.Count > 1)
-            {
-//                dataGridView1.Rows.RemoveAt(0);
-            }
         }
 
         public void OnInitialize()
@@ -96,9 +87,9 @@ namespace ALPRibbon
                 // Read XML Placeholder shape for this poll
                 foreach (PowerPoint.Shape shape in oSlide.Shapes)
                 {
-                    if (shape.AlternativeText.Equals("FreeResponsePoll"))
+                    if (shape.AlternativeText.Equals("FreeResponsePollXML"))
                     {
-//                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView1, AddJustificationCheckBox, JustificationTextBox);
+                        ALPPowerpointUtils.ReadFreeResponseXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox);
                     }
                 }
             }
@@ -122,9 +113,9 @@ namespace ALPRibbon
                     // Remove XML Placeholder shape for this poll
                     foreach (PowerPoint.Shape shape in oSlide.Shapes)
                     {
-                        if (shape.AlternativeText.Equals("FreeResponsePoll"))
+                        if (shape.AlternativeText.Equals("FreeResponsePollXML"))
                         {
-                            if (MessageBox.Show("Remove Poll from current slide?", "Multiple Choice", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                            if (MessageBox.Show("Remove Poll from current slide?", "Free Response", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                             {
                                 shape.Delete();
                             }
