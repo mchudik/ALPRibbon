@@ -87,6 +87,8 @@ namespace ALPRibbon
             // hook into powerpoint events
             this.Application.SlideSelectionChanged +=
                 new PowerPoint.EApplication_SlideSelectionChangedEventHandler(Application_SlideSelectionChanged);
+            this.Application.PresentationClose +=
+                new PowerPoint.EApplication_PresentationCloseEventHandler(Application_PresentationClose);
 
             // hook into slideshow events
             this.Application.SlideShowBegin +=
@@ -191,6 +193,15 @@ namespace ALPRibbon
             {
                 Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnInitialize();
             }
+        }
+        private void Application_PresentationClose(PowerPoint.Presentation Pres)
+        {
+            _currentSlideNum = 0;
+            ALPPaneLogInTaskPane.Visible = false;
+            ALPPaneUploadTaskPane.Visible = false;
+            ALPPaneMultipleChoiceTaskPane.Visible = false;
+            ALPPaneImageQuizTaskPane.Visible = false;
+            ALPPaneFreeResponseTaskPane.Visible = false;
         }
 
         // slideshow events

@@ -274,6 +274,26 @@ namespace ALPRibbon
             }
         }
 
+        public static void AddVisibleImageShape(PowerPoint.Slide oSlide, string slideName)
+        {
+            try
+            {
+                // Export the slide to a bitmap
+                string strFileName = RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\" + oSlide.Name + ".png";
+                oSlide.Export(strFileName, "PNG");
+
+                // Add Placeholder shape for image of this poll
+                PowerPoint.Shape oShapePicture = oSlide.Shapes.AddPicture(strFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0);
+                oShapePicture.Left = 0;
+                oShapePicture.Top = 0;
+                oShapePicture.AlternativeText = slideName;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         public static string WriteMultiQuestionXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             using (var ms = new MemoryStream())

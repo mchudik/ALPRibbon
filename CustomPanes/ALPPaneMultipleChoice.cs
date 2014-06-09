@@ -40,8 +40,8 @@ namespace ALPRibbon
                     AddHiddenShapes(oSlide);
 
                     //Export Slide as Image
-                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "MultipleChoicePollImage");
-                    AddVisibleImageShape(oSlide);
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "MultipleChoicePollSlideImage");
+                    ALPPowerpointUtils.AddVisibleImageShape(oSlide, "MultipleChoicePollSlideImage");
 
                     // Remove Visible items
                     ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "MultipleChoicePollQuestion");
@@ -163,12 +163,15 @@ namespace ALPRibbon
                     if (row.IsNewRow) break;
                     if (oTextRange.Text.Length > 0)
                         oTextRange.Text += "\n";
-                    if (row.Cells[0].Value != null)
-                        oTextRange.Text += row.Cells[0].Value.ToString();
-                    else
-                        oTextRange.Text += "False";
-                    oTextRange.Text += "\t";
-                    oTextRange.Text += row.Cells[1].Value.ToString();
+                    if (row.Cells[1].Value != null)
+                    {
+                        if (row.Cells[0].Value != null)
+                            oTextRange.Text += row.Cells[0].Value.ToString();
+                        else
+                            oTextRange.Text += "False";
+                        oTextRange.Text += "\t";
+                        oTextRange.Text += row.Cells[1].Value.ToString();
+                    }
                 }
                 oTextRange.ParagraphFormat.Alignment = PowerPoint.PpParagraphAlignment.ppAlignLeft;
                 PowerPoint.ParagraphFormat oParagraphFormat = oTextRange.ParagraphFormat;
@@ -183,16 +186,19 @@ namespace ALPRibbon
                 oShapeText.AlternativeText = "MultipleChoicePollAnswers";
 
                 // Add Justification
-                PowerPoint.Shape oShapeTextJust = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, nSlideWidth, nSlideHeight);
-                PowerPoint.TextRange oTextRangeJust = oShapeTextJust.TextFrame.TextRange;
-                oTextRangeJust.Text = "\nAdd Justification:\t" + AddJustificationCheckBox.Checked.ToString();
-                oTextRangeJust.Text += "\n";
-                oTextRangeJust.Text += JustificationTextBox.Text;
-                oTextRangeJust.Font.Name = "Tahoma";
-                oTextRangeJust.Font.Size = 24;
-                oShapeTextJust.Left = nSlideWidth / 10;
-                oShapeTextJust.Top = oShapeText.Top + oShapeText.Height;
-                oShapeTextJust.AlternativeText = "MultipleChoicePollJustification";
+                if (AddJustificationCheckBox.Checked)
+                {
+                    PowerPoint.Shape oShapeTextJust = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, nSlideWidth, nSlideHeight);
+                    PowerPoint.TextRange oTextRangeJust = oShapeTextJust.TextFrame.TextRange;
+                    oTextRangeJust.Text = "\nAdd Justification\t";
+                    oTextRangeJust.Text += "\n";
+                    oTextRangeJust.Text += JustificationTextBox.Text;
+                    oTextRangeJust.Font.Name = "Tahoma";
+                    oTextRangeJust.Font.Size = 24;
+                    oShapeTextJust.Left = nSlideWidth / 10;
+                    oShapeTextJust.Top = oShapeText.Top + oShapeText.Height;
+                    oShapeTextJust.AlternativeText = "MultipleChoicePollJustification";
+                }
             }
             catch (Exception ex)
             {
@@ -218,25 +224,6 @@ namespace ALPRibbon
                 if (Globals.RibbonAddIn.bDebug == false)
                     oShapeTextXML.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
                 oShapeTextXML.AlternativeText = "MultipleChoicePollXML";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        private void AddVisibleImageShape(PowerPoint.Slide oSlide)
-        {
-            try
-            {
-                // Export the slide to a bitmap
-                string strFileName = RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\" + oSlide.Name + ".png";
-                oSlide.Export(strFileName, "PNG");
-
-                // Add Placeholder shape for image of this poll
-                PowerPoint.Shape oShapePicture = oSlide.Shapes.AddPicture(strFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0);
-                oShapePicture.Left = 0;
-                oShapePicture.Top = 0;
-                oShapePicture.AlternativeText = "MultipleChoicePollImage";
             }
             catch (Exception ex)
             {

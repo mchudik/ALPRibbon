@@ -27,48 +27,28 @@ namespace ALPRibbon
                 if (RibbonAddIn.ALPCurrentSlide <= 0)
                     return;
 
-                PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
-                // Remove XML Placeholder shapes for this poll
-                foreach (PowerPoint.Shape shape in oSlide.Shapes)
+                PowerPoint.Slide oSlide = ALPPowerpointUtils.GetOrInsertPlaceholderSlide("Image_Quiz");
+                if (oSlide != null)
                 {
-                    if (shape.AlternativeText.Equals("ImageQuizPollXML"))
-                    {
-                        shape.Delete();
-                    }
-                }
-                // Remove Image Placeholder shapes for this poll
-                foreach (PowerPoint.Shape shape in oSlide.Shapes)
-                {
-                    if (shape.AlternativeText.Equals("ImageQuizPollImage"))
-                    {
-                        shape.Delete();
-                    }
-                }
+                    // Add Visible items
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollQuestion");
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollImage");
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollJustification");
+                    AddVisibleShapes(oSlide);
 
-                // Add XML Placeholder shape for this poll
-                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
-                PowerPoint.Shapes oShapes = oSlide.Shapes;
-                PowerPoint.Shape oShapeText = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
-                PowerPoint.TextRange oTextRange = oShapeText.TextFrame.TextRange;
-                oTextRange.Text = textXML;
-                oTextRange.Font.Name = "Tahoma";
-                oTextRange.Font.Size = 20;
-                oShapeText.Width = oSlide.Master.Width;
-                oShapeText.Left = 0;
-                oShapeText.Top = 0;
-                if (Globals.RibbonAddIn.bDebug == false)
-                    oShapeText.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
-                oShapeText.AlternativeText = "ImageQuizPollXML";
+                    //Process Hidden items
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollXML");
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollImageMTD");
+                    AddHiddenShapes(oSlide);
 
-                // Add Placeholder shape for image of this poll
-                if (ImagePictureBox.ImageLocation != null)
-                {
-                    PowerPoint.Shape oShapePicture = oShapes.AddPicture(ImagePictureBox.ImageLocation, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoFalse, 0, 0);
-                    oShapePicture.Left = 0;
-                    oShapePicture.Top = 0;
-                    if (Globals.RibbonAddIn.bDebug == false)
-                        oShapePicture.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
-                    oShapePicture.AlternativeText = "ImageQuizPollImage";
+                    //Export Slide as Image
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollSlideImage");
+                    ALPPowerpointUtils.AddVisibleImageShape(oSlide, "ImageQuizPollSlideImage");
+
+                    // Remove Visible items
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollQuestion");
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollImage");
+                    ALPPowerpointUtils.RemoveShapeFromSlide(oSlide, "ImageQuizPollJustification");
                 }
             }
             catch (Exception ex)
@@ -104,6 +84,7 @@ namespace ALPRibbon
             JustificationTextBox.Text = "";
             AddJustificationCheckBox.Checked = false;
             ImagePictureBox.Image = null;
+            ImageNameLabel.Text = "Click To Select";
         }
 
         public void OnInitialize()
@@ -124,7 +105,7 @@ namespace ALPRibbon
                     {
                         ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
                     }
-                    if (shape.AlternativeText.Equals("ImageQuizPollImage"))
+                    if (shape.AlternativeText.Equals("ImageQuizPollImageMTD"))
                     {
                         ImagePictureBox.Load(shape.LinkFormat.SourceFullName);
                         ImageNameLabel.Text = Path.GetFileName(shape.LinkFormat.SourceFullName);
@@ -147,39 +128,100 @@ namespace ALPRibbon
                 {
                     // Clear all UI variables
                     ResetVariables();
-                    PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
-                    
-                    bool bRemovePoll = false;
-                    // Check if remove Placeholder shapes for this poll
-                    foreach (PowerPoint.Shape shape in oSlide.Shapes)
-                    {
-                        if (shape.AlternativeText.Equals("ImageQuizPollXML") || shape.AlternativeText.Equals("ImageQuizPollImage"))
-                        {
-                            if (MessageBox.Show("Remove Poll from current slide?", "Image Quiz", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                            {
-                                bRemovePoll = true;
-                                break;
-                            }
-                        }
-                    }
-                    if(bRemovePoll == true) {
-                        // Remove XML Placeholder shape for this poll
-                        foreach (PowerPoint.Shape shape in oSlide.Shapes)
-                        {
-                            if (shape.AlternativeText.Equals("ImageQuizPollXML"))
-                            {
-                                shape.Delete();
-                            }
-                        }
-                        // Remove Image Placeholder shape for this poll
-                        foreach (PowerPoint.Shape shape in oSlide.Shapes)
-                        {
-                            if (shape.AlternativeText.Equals("ImageQuizPollImage"))
-                            {
-                                shape.Delete();
-                            }
-                        }
-                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AddVisibleShapes(PowerPoint.Slide oSlide)
+        {
+            try
+            {
+                PowerPoint.PageSetup oPageSetup = Globals.RibbonAddIn.Application.ActivePresentation.PageSetup;
+                float nSlideWidth = oPageSetup.SlideWidth;
+                float nSlideHeight = oPageSetup.SlideHeight;
+                PowerPoint.Shapes oShapes = oSlide.Shapes;
+
+                // Add Question Title
+                PowerPoint.Shape oShapeTextQuestion = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, nSlideWidth, nSlideHeight);
+                PowerPoint.TextRange oTextRangeQuestion = oShapeTextQuestion.TextFrame.TextRange;
+                oTextRangeQuestion.ParagraphFormat.Alignment = PowerPoint.PpParagraphAlignment.ppAlignCenter;
+                oTextRangeQuestion.Text = QuestionTextBox.Text;
+                oTextRangeQuestion.Font.Name = "Tahoma";
+                oTextRangeQuestion.Font.Size = 36;
+                oTextRangeQuestion.Font.Bold = Microsoft.Office.Core.MsoTriState.msoTrue;
+                oShapeTextQuestion.Left = nSlideWidth / 10;
+                oShapeTextQuestion.Top = 10;
+                oShapeTextQuestion.Width = 8 * (nSlideWidth / 10);
+                oShapeTextQuestion.Height = oShapeTextQuestion.TextFrame.TextRange.BoundHeight;
+                oShapeTextQuestion.AlternativeText = "ImageQuizPollQuestion";
+
+                // Add Visible Image
+                if (ImagePictureBox.ImageLocation != null)
+                {
+                    PowerPoint.Shape oShapePicture = oShapes.AddPicture(ImagePictureBox.ImageLocation, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0);
+                    oShapePicture.Width = 8 * (nSlideWidth / 10);
+                    if (AddJustificationCheckBox.Checked)
+                        oShapePicture.Height = 6 * (nSlideHeight / 10);
+                    else
+                        oShapePicture.Height = 8 * (nSlideHeight / 10);
+                    oShapePicture.Left = (nSlideWidth / 2) - (oShapePicture.Width / 2);
+                    oShapePicture.Top = 2 * (nSlideHeight / 10); ;
+                    oShapePicture.AlternativeText = "ImageQuizPollImage";
+                }
+
+                // Add Justification
+                if (AddJustificationCheckBox.Checked)
+                {
+                    PowerPoint.Shape oShapeTextJust = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, nSlideWidth, nSlideHeight);
+                    PowerPoint.TextRange oTextRangeJust = oShapeTextJust.TextFrame.TextRange;
+                    oTextRangeJust.Text = "\nAdd Justification\t";
+                    oTextRangeJust.Text += "\n";
+                    oTextRangeJust.Text += JustificationTextBox.Text;
+                    oTextRangeJust.Font.Name = "Tahoma";
+                    oTextRangeJust.Font.Size = 24;
+                    oShapeTextJust.Left = nSlideWidth / 10;
+                    oShapeTextJust.Top = 8 * (nSlideHeight / 10);
+                    oShapeTextJust.AlternativeText = "ImageQuizPollJustification";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AddHiddenShapes(PowerPoint.Slide oSlide)
+        {
+            try
+            {
+                // Add XML Placeholder shape for this poll
+                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                PowerPoint.Shapes oShapes = oSlide.Shapes;
+                PowerPoint.Shape oShapeTextXML = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
+                PowerPoint.TextRange oTextRangeXML = oShapeTextXML.TextFrame.TextRange;
+                oTextRangeXML.Text = textXML;
+                oTextRangeXML.Font.Name = "Tahoma";
+                oTextRangeXML.Font.Size = 20;
+                oShapeTextXML.Width = oSlide.Master.Width;
+                oShapeTextXML.Left = 0;
+                oShapeTextXML.Top = 0;
+                if (Globals.RibbonAddIn.bDebug == false)
+                    oShapeTextXML.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                oShapeTextXML.AlternativeText = "ImageQuizPollXML";
+
+                // Add MetaData shape for image of this poll
+                if (ImagePictureBox.ImageLocation != null)
+                {
+                    PowerPoint.Shape oShapePicture = oShapes.AddPicture(ImagePictureBox.ImageLocation, Microsoft.Office.Core.MsoTriState.msoTrue, Microsoft.Office.Core.MsoTriState.msoFalse, 0, 0);
+                    oShapePicture.Left = 0;
+                    oShapePicture.Top = 0;
+                    if (Globals.RibbonAddIn.bDebug == false)
+                        oShapePicture.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
+                    oShapePicture.AlternativeText = "ImageQuizPollImageMTD";
                 }
             }
             catch (Exception ex)
@@ -192,8 +234,11 @@ namespace ALPRibbon
         {
             OpenFileDialog openFileDlg = new OpenFileDialog();
             openFileDlg.Filter = "Images (*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG|All files (*.*)|*.*";
-            if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK) 
+            if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
                 ImagePictureBox.Load(openFileDlg.FileName);
+                ImageNameLabel.Text = Path.GetFileName(openFileDlg.FileName);
+            }
         }
 
         private Point initialMousePos;
@@ -283,7 +328,6 @@ namespace ALPRibbon
                 ImagePictureBox.Load(openFileDlg.FileName);
                 ImageNameLabel.Text = Path.GetFileName(openFileDlg.FileName);
             }
-
         }
 
         private void MarkSolutionButton_Click(object sender, EventArgs e)

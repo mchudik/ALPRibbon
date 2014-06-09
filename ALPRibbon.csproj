@@ -182,73 +182,73 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="ALPAboutBox.cs">
+    <Compile Include="DialogBoxes\ALPAboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ALPAboutBox.Designer.cs">
+    <Compile Include="DialogBoxes\ALPAboutBox.Designer.cs">
       <DependentUpon>ALPAboutBox.cs</DependentUpon>
     </Compile>
-    <Compile Include="ALPPaneFreeResponse.cs">
+    <Compile Include="CustomPanes\ALPPaneFreeResponse.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ALPPaneFreeResponse.Designer.cs">
+    <Compile Include="CustomPanes\ALPPaneFreeResponse.Designer.cs">
       <DependentUpon>ALPPaneFreeResponse.cs</DependentUpon>
     </Compile>
-    <Compile Include="ALPPaneImageQuiz.cs">
+    <Compile Include="CustomPanes\ALPPaneImageQuiz.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ALPPaneImageQuiz.Designer.cs">
+    <Compile Include="CustomPanes\ALPPaneImageQuiz.Designer.cs">
       <DependentUpon>ALPPaneImageQuiz.cs</DependentUpon>
     </Compile>
-    <Compile Include="ALPPaneLogIn.cs">
+    <Compile Include="CustomPanes\ALPPaneLogIn.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ALPPaneLogIn.Designer.cs">
+    <Compile Include="CustomPanes\ALPPaneLogIn.Designer.cs">
       <DependentUpon>ALPPaneLogIn.cs</DependentUpon>
     </Compile>
-    <Compile Include="ALPPaneMultipleChoice.cs">
+    <Compile Include="CustomPanes\ALPPaneMultipleChoice.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ALPPaneMultipleChoice.Designer.cs">
+    <Compile Include="CustomPanes\ALPPaneMultipleChoice.Designer.cs">
       <DependentUpon>ALPPaneMultipleChoice.cs</DependentUpon>
     </Compile>
-    <Compile Include="ALPPaneUpload.cs">
+    <Compile Include="CustomPanes\ALPPaneUpload.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="ALPPaneUpload.Designer.cs">
+    <Compile Include="CustomPanes\ALPPaneUpload.Designer.cs">
       <DependentUpon>ALPPaneUpload.cs</DependentUpon>
     </Compile>
-    <Compile Include="ALPRibbon.cs">
+    <Compile Include="ALPRibbonBar\ALPRibbon.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ALPRibbon.Designer.cs">
+    <Compile Include="ALPRibbonBar\ALPRibbon.Designer.cs">
       <DependentUpon>ALPRibbon.cs</DependentUpon>
     </Compile>
-    <Compile Include="ALPGeneralUtils.cs" />
-    <Compile Include="ALPPowerpointUtils.cs" />
-    <Compile Include="ALPWebsiteToImage.cs" />
+    <Compile Include="Utilities\ALPGeneralUtils.cs" />
+    <Compile Include="Utilities\ALPPowerpointUtils.cs" />
+    <Compile Include="Network\ALPWebsiteToImage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <EmbeddedResource Include="ALPAboutBox.resx">
+    <EmbeddedResource Include="DialogBoxes\ALPAboutBox.resx">
       <DependentUpon>ALPAboutBox.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ALPPaneFreeResponse.resx">
+    <EmbeddedResource Include="CustomPanes\ALPPaneFreeResponse.resx">
       <DependentUpon>ALPPaneFreeResponse.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ALPPaneImageQuiz.resx">
+    <EmbeddedResource Include="CustomPanes\ALPPaneImageQuiz.resx">
       <DependentUpon>ALPPaneImageQuiz.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ALPPaneLogIn.resx">
+    <EmbeddedResource Include="CustomPanes\ALPPaneLogIn.resx">
       <DependentUpon>ALPPaneLogIn.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ALPPaneMultipleChoice.resx">
+    <EmbeddedResource Include="CustomPanes\ALPPaneMultipleChoice.resx">
       <DependentUpon>ALPPaneMultipleChoice.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ALPPaneUpload.resx">
+    <EmbeddedResource Include="CustomPanes\ALPPaneUpload.resx">
       <DependentUpon>ALPPaneUpload.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ALPRibbon.resx">
+    <EmbeddedResource Include="ALPRibbonBar\ALPRibbon.resx">
       <DependentUpon>ALPRibbon.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -261,7 +261,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="ALPRibbon_TemporaryKey.pfx" />
+    <None Include="Properties\ALPRibbon_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -287,6 +287,7 @@
   <ItemGroup>
     <None Include="Properties\echo360_logo_blue.png" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
