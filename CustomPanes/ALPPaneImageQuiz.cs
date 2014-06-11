@@ -168,6 +168,8 @@ namespace ALPRibbon
                         oShapePicture.Height = 6 * (nSlideHeight / 10);
                     else
                         oShapePicture.Height = 8 * (nSlideHeight / 10);
+                    if (oShapePicture.Width > nSlideWidth)
+                        oShapePicture.Width = nSlideWidth;
                     oShapePicture.Left = (nSlideWidth / 2) - (oShapePicture.Width / 2);
                     oShapePicture.Top = 2 * (nSlideHeight / 10); ;
                     oShapePicture.AlternativeText = "ImageQuizPollImage";
@@ -242,98 +244,197 @@ namespace ALPRibbon
         }
 
         private Point initialMousePos;
+        private Point initialImagePos;
         private Point currentMousePos;
         private bool bDrawing = false;
         private bool bMarked = false;
         private Rectangle solutionRect;
 
+        private Point ImageMousePos(Point p)
+        {
+            Point unscaled_p = new Point();
+            try
+            {
+                if (ImagePictureBox.Image == null) return unscaled_p;
+
+                // image and container dimensions
+                int w_i = ImagePictureBox.Image.Width;
+                int h_i = ImagePictureBox.Image.Height;
+                int w_c = ImagePictureBox.Width;
+                int h_c = ImagePictureBox.Height;
+
+                float imageRatio = w_i / (float)h_i; // image W:H ratio
+                float containerRatio = w_c / (float)h_c; // container W:H ratio
+
+                if (imageRatio >= containerRatio)
+                {
+                    // horizontal image
+                    float scaleFactor = w_c / (float)w_i;
+                    float scaledHeight = h_i * scaleFactor;
+                    // calculate gap between top of container and top of image
+                    float filler = Math.Abs(h_c - scaledHeight) / 2;
+                    unscaled_p.X = (int)(p.X / scaleFactor);
+                    unscaled_p.Y = (int)((p.Y - filler) / scaleFactor);
+                }
+                else
+                {
+                    // vertical image
+                    float scaleFactor = h_c / (float)h_i;
+                    float scaledWidth = w_i * scaleFactor;
+                    float filler = Math.Abs(w_c - scaledWidth) / 2;
+                    unscaled_p.X = (int)((p.X - filler) / scaleFactor);
+                    unscaled_p.Y = (int)(p.Y / scaleFactor);
+                }
+
+                return unscaled_p;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return unscaled_p;
+            }
+        }
+
         private void ImagePictureBox_MouseDown(object sender, MouseEventArgs e)
         {
-            bDrawing = true;
-            bMarked = false;
-            this.initialMousePos = e.Location;
+            try
+            {
+                bDrawing = true;
+                bMarked = false;
+                this.initialMousePos = e.Location;
+                this.initialImagePos = ImageMousePos(e.Location);
+                if (ImagePictureBox.ImageLocation != null)
+                    ImagePictureBox.Load(ImagePictureBox.ImageLocation);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ImagePictureBox_MouseUp(object sender, MouseEventArgs e)
         {
-            if (!bDrawing)
-                return;
+            try
+            {
+                if (!bDrawing)
+                    return;
 
-            // Save the final position of the mouse
-            Point finalMousePos = e.Location;
+                // Save the final position of the mouse
+                Point finalImagePos = ImageMousePos(e.Location);
 
-            // Create the rectangle from the two points
-            solutionRect = Rectangle.FromLTRB(
-                                                this.initialMousePos.X,
-                                                this.initialMousePos.Y,
-                                                finalMousePos.X,
-                                                finalMousePos.Y);
+                // Create the rectangle from the two points
+                solutionRect = Rectangle.FromLTRB(
+                                                    this.initialImagePos.X,
+                                                    this.initialImagePos.Y,
+                                                    finalImagePos.X,
+                                                    finalImagePos.Y);
 
-            // Do whatever you want with the rectangle here
-            // ...
-            bDrawing = false;
+                // Do whatever you want with the rectangle here
+                // ...
+                bDrawing = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ImagePictureBox_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!bDrawing)
-                return;
+            try
+            {
+                if (!bDrawing)
+                    return;
 
-            // Save the current position of the mouse
-            currentMousePos = e.Location;
+                // Save the current position of the mouse
+                currentMousePos = e.Location;
 
-            // Force the picture box to be repainted
-            ImagePictureBox.Invalidate();
+                // Force the picture box to be repainted
+                ImagePictureBox.Invalidate();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void ImagePictureBox_Paint(object sender, PaintEventArgs e)
         {
-            if (bDrawing)
+            try
             {
-                // Create a pen object that we'll use to draw
-                // (change these parameters to make it any color and size you want)
-                using (Pen p = new Pen(Color.Red, 2.0F))
+                if (bDrawing)
                 {
-                    // Create a rectangle with the initial cursor location as the upper-left
-                    // point, and the current cursor location as the bottom-right point
-                    Rectangle currentRect = Rectangle.FromLTRB(
-                                                               this.initialMousePos.X,
-                                                               this.initialMousePos.Y,
-                                                               currentMousePos.X,
-                                                               currentMousePos.Y);
-
-                    // Draw the rectangle
-                    e.Graphics.DrawRectangle(p, currentRect);
-                }
-            }
-            else
-            {
-                if (bMarked == true)
-                {
-                    using (Pen p = new Pen(Color.Green, 2.0F))
+                    // Create a pen object that we'll use to draw
+                    // (change these parameters to make it any color and size you want)
+                    using (Pen p = new Pen(Color.Red, 2.0F))
                     {
+                        // Create a rectangle with the initial cursor location as the upper-left
+                        // point, and the current cursor location as the bottom-right point
+                        Rectangle currentRect = Rectangle.FromLTRB(
+                                                                   this.initialMousePos.X,
+                                                                   this.initialMousePos.Y,
+                                                                   currentMousePos.X,
+                                                                   currentMousePos.Y);
+
                         // Draw the rectangle
-                        e.Graphics.DrawRectangle(p, solutionRect);
+                        e.Graphics.DrawRectangle(p, currentRect);
                     }
                 }
+                else
+                {
+                    if (bMarked == true)
+                    {
+                        using (Pen p = new Pen(Color.Green, 2.0F))
+                        {
+                            if (ImagePictureBox.Image != null)
+                            {
+                                // Draw the rectangle
+                                using (Graphics g = Graphics.FromImage(ImagePictureBox.Image))
+                                {
+                                    g.DrawRectangle(p, solutionRect);
+                                }
+                            }
+                        }
+                        bMarked = false;
+                        ImagePictureBox.Invalidate();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void ImageNameLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            OpenFileDialog openFileDlg = new OpenFileDialog();
-            openFileDlg.Filter = "Images (*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG|All files (*.*)|*.*";
-            if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            try
             {
-                ImagePictureBox.Load(openFileDlg.FileName);
-                ImageNameLabel.Text = Path.GetFileName(openFileDlg.FileName);
+                OpenFileDialog openFileDlg = new OpenFileDialog();
+                openFileDlg.Filter = "Images (*.BMP;*.JPG;*.PNG)|*.BMP;*.JPG;*.PNG|All files (*.*)|*.*";
+                if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    ImagePictureBox.Load(openFileDlg.FileName);
+                    ImageNameLabel.Text = Path.GetFileName(openFileDlg.FileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void MarkSolutionButton_Click(object sender, EventArgs e)
         {
-            bMarked = true;
-            ImagePictureBox.Invalidate();
+            try
+            {
+                bMarked = true;
+                ImagePictureBox.Invalidate(true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
