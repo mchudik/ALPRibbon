@@ -10,14 +10,55 @@ using System.Windows.Forms;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using ALPRibbon.Properties;
 using System.IO;
+using Tools = Microsoft.Office.Tools;
 
 namespace ALPRibbon
 {
     public partial class ALPPaneImageQuiz : UserControl
     {
+        public Tools.CustomTaskPane TaskPane;
+        public PowerPoint.DocumentWindow DocWindow;
+
         public ALPPaneImageQuiz()
         {
             InitializeComponent();
+        }
+
+        public ALPPaneImageQuiz(string strName, PowerPoint.DocumentWindow docWindow)
+        {
+            InitializeComponent();
+            DocWindow = docWindow;
+            TaskPane = Globals.RibbonAddIn.CustomTaskPanes.Add(this, strName, DocWindow);
+            TaskPane.VisibleChanged += new EventHandler(ALPPane_VisibleChanged);
+            Globals.RibbonAddIn.ALPPaneImageQuizList.Add(this);
+            Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
+        }
+
+        public void ALPPane_VisibleChanged(object sender, System.EventArgs e)
+        {
+            if (DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = TaskPane.Visible;
+        }
+
+        public void ALPPaneConfigure(int floatingWidth, int floatingHeight, int dockedWidth)
+        {
+            // Set default for floating view    
+            TaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
+            TaskPane.Width = floatingWidth;
+            TaskPane.Height = floatingHeight;
+            // Set default for docked view    
+            TaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
+            TaskPane.Width = dockedWidth;
+            // Set docking restrictions
+            TaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
+        }
+
+        public void ALPPaneDelete()
+        {
+            Globals.RibbonAddIn.CustomTaskPanes.Remove(TaskPane);
+            TaskPane.Dispose();
+            Globals.RibbonAddIn.ALPPaneImageQuizList.Remove(this);
+            this.Dispose();
         }
 
         private void SubmitButton_Click(object sender, EventArgs e)

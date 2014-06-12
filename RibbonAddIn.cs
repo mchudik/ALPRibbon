@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using Tools = Microsoft.Office.Tools;
 using Office = Microsoft.Office.Core;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
 
 namespace ALPRibbon
 {
@@ -29,54 +31,13 @@ namespace ALPRibbon
                 return _currentSlideNum;
             }
         }
-        public Microsoft.Office.Tools.CustomTaskPane ALPLogInTaskPane
-        {
-            get
-            {
-                return ALPPaneLogInTaskPane;
-            }
-        }
-        public Microsoft.Office.Tools.CustomTaskPane ALPUploadTaskPane
-        {
-            get
-            {
-                return ALPPaneUploadTaskPane;
-            }
-        }
-        public Microsoft.Office.Tools.CustomTaskPane ALPMultipleChoiceTaskPane
-        {
-            get
-            {
-                return ALPPaneMultipleChoiceTaskPane;
-            }
-        }
-        public Microsoft.Office.Tools.CustomTaskPane ALPImageQuizTaskPane
-        {
-            get
-            {
-                return ALPPaneImageQuizTaskPane;
-            }
-        }
-        public Microsoft.Office.Tools.CustomTaskPane ALPImageFreeResponsePane
-        {
-            get
-            {
-                return ALPPaneFreeResponseTaskPane;
-            }
-        }
 
-
-        // Custom Pane Controls
-        private ALPPaneLogIn ALPPaneLogInControl;
-        private Microsoft.Office.Tools.CustomTaskPane ALPPaneLogInTaskPane;
-        private ALPPaneUpload ALPPaneUploadControl;
-        private Microsoft.Office.Tools.CustomTaskPane ALPPaneUploadTaskPane;
-        private ALPPaneMultipleChoice ALPPaneMultipleChoiceControl;
-        private Microsoft.Office.Tools.CustomTaskPane ALPPaneMultipleChoiceTaskPane;
-        private ALPPaneImageQuiz ALPPaneImageQuizControl;
-        private Microsoft.Office.Tools.CustomTaskPane ALPPaneImageQuizTaskPane;
-        private ALPPaneFreeResponse ALPPaneFreeResponseControl;
-        private Microsoft.Office.Tools.CustomTaskPane ALPPaneFreeResponseTaskPane;
+        // Custom Pane Lists
+        public List<ALPPaneLogIn> ALPPaneLogInList = new List<ALPPaneLogIn>();
+        public List<ALPPaneUpload> ALPPaneUploadList = new List<ALPPaneUpload>();
+        public List<ALPPaneMultipleChoice> ALPPaneMultipleChoiceList = new List<ALPPaneMultipleChoice>();
+        public List<ALPPaneImageQuiz> ALPPaneImageQuizList = new List<ALPPaneImageQuiz>();
+        public List<ALPPaneFreeResponse> ALPPaneFreeResponseList = new List<ALPPaneFreeResponse>();
 
         // Event Handlers
         private void RibbonAddIn_Startup(object sender, System.EventArgs e)
@@ -87,8 +48,14 @@ namespace ALPRibbon
             // hook into powerpoint events
             this.Application.SlideSelectionChanged +=
                 new PowerPoint.EApplication_SlideSelectionChangedEventHandler(Application_SlideSelectionChanged);
-            this.Application.PresentationClose +=
-                new PowerPoint.EApplication_PresentationCloseEventHandler(Application_PresentationClose);
+            this.Application.AfterNewPresentation +=
+                new PowerPoint.EApplication_AfterNewPresentationEventHandler(Application_PresentationNew);
+            this.Application.PresentationOpen +=
+                new PowerPoint.EApplication_PresentationOpenEventHandler(Application_PresentationOpen);
+            this.Application.PresentationCloseFinal +=
+                new PowerPoint.EApplication_PresentationCloseFinalEventHandler(Application_PresentationClose);
+            this.Application.WindowActivate +=
+                new PowerPoint.EApplication_WindowActivateEventHandler(Application_WindowActivate);
 
             // hook into slideshow events
             this.Application.SlideShowBegin +=
@@ -99,82 +66,34 @@ namespace ALPRibbon
                 new PowerPoint.EApplication_SlideShowOnPreviousEventHandler(Application_SlideShowOnPrevious);
             this.Application.SlideShowEnd +=
                 new PowerPoint.EApplication_SlideShowEndEventHandler(Application_SlideShowEnd);
-            
-            // LogIn Custom Pane
-            ALPPaneLogInControl = new ALPPaneLogIn();
-            ALPPaneLogInTaskPane = this.CustomTaskPanes.Add(ALPPaneLogInControl, "User Sign In");
-            ALPPaneLogInTaskPane.VisibleChanged += new EventHandler(ALPPaneLogInTaskPane_VisibleChanged);
-            // Set default for floating view    
-            ALPPaneLogInTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneLogInTaskPane.Width = 275;
-            ALPPaneLogInTaskPane.Height = 550;
-            // Set default for docked view    
-            ALPPaneLogInTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneLogInTaskPane.Width = 275;
-            // Set docking restrictions
-            ALPPaneLogInTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
-
-            // Upload Custom Pane
-            ALPPaneUploadControl = new ALPPaneUpload();
-            ALPPaneUploadTaskPane = this.CustomTaskPanes.Add(ALPPaneUploadControl, "Upload Presentation");
-            ALPPaneUploadTaskPane.VisibleChanged += new EventHandler(ALPPaneUploadTaskPane_VisibleChanged);
-            // Set default for floating view    
-            ALPPaneUploadTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneUploadTaskPane.Width = 450;
-            ALPPaneUploadTaskPane.Height = 600;
-            // Set default for docked view    
-            ALPPaneUploadTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneUploadTaskPane.Width = 450;
-            // Set docking restrictions
-            ALPPaneUploadTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
-
-            // MultipleChoice Custom Pane
-            ALPPaneMultipleChoiceControl = new ALPPaneMultipleChoice();
-            ALPPaneMultipleChoiceTaskPane = this.CustomTaskPanes.Add(ALPPaneMultipleChoiceControl, "Multiple Choice");
-            ALPPaneMultipleChoiceTaskPane.VisibleChanged += new EventHandler(ALPPaneMultipleChoiceTaskPane_VisibleChanged);
-            // Set default for floating view    
-            ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneMultipleChoiceTaskPane.Width = 500;
-            ALPPaneMultipleChoiceTaskPane.Height = 600;
-            // Set default for docked view    
-            ALPPaneMultipleChoiceTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneMultipleChoiceTaskPane.Width = 300;
-            // Set docking restrictions
-            ALPPaneMultipleChoiceTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
-
-            // ImageQuiz Custom Pane
-            ALPPaneImageQuizControl = new ALPPaneImageQuiz();
-            ALPPaneImageQuizTaskPane = this.CustomTaskPanes.Add(ALPPaneImageQuizControl, "Image Quiz");
-            ALPPaneImageQuizTaskPane.VisibleChanged += new EventHandler(ALPPaneImageQuizTaskPane_VisibleChanged);
-            // Set default for floating view    
-            ALPPaneImageQuizTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneImageQuizTaskPane.Width = 700;
-            ALPPaneImageQuizTaskPane.Height = 900;
-            // Set default for docked view    
-            ALPPaneImageQuizTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneImageQuizTaskPane.Width = 300;
-            // Set docking restrictions
-            ALPPaneImageQuizTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
-
-            // FreeResponse Custom Pane
-            ALPPaneFreeResponseControl = new ALPPaneFreeResponse();
-            ALPPaneFreeResponseTaskPane = this.CustomTaskPanes.Add(ALPPaneFreeResponseControl, "Free Response");
-            ALPPaneFreeResponseTaskPane.VisibleChanged += new EventHandler(ALPPaneFreeResponseTaskPane_VisibleChanged);
-            // Set default for floating view    
-            ALPPaneFreeResponseTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionFloating;
-            ALPPaneFreeResponseTaskPane.Width = 500;
-            ALPPaneFreeResponseTaskPane.Height = 600;
-            // Set default for docked view    
-            ALPPaneFreeResponseTaskPane.DockPosition = Microsoft.Office.Core.MsoCTPDockPosition.msoCTPDockPositionRight;
-            ALPPaneFreeResponseTaskPane.Width = 300;
-            // Set docking restrictions
-            ALPPaneFreeResponseTaskPane.DockPositionRestrict = Microsoft.Office.Core.MsoCTPDockPositionRestrict.msoCTPDockPositionRestrictNoHorizontal;
-
         }
 
         private void RibbonAddIn_Shutdown(object sender, System.EventArgs e)
         {
             Directory.Delete(RibbonAddIn.WORKING_DIR, true);
+        }
+
+        private void CreateCustomPanes(PowerPoint.Presentation Pres)
+        {
+            // If opening from template document might not exist
+            if (Pres.Windows.Count == 0)
+                return;
+
+            // LogIn Custom Pane
+            ALPPaneLogIn ALPPaneLogInControl = new ALPPaneLogIn("User Sign In", Globals.RibbonAddIn.Application.ActiveWindow);
+            ALPPaneLogInControl.ALPPaneConfigure(275, 550, 275);
+            // Upload Custom Pane
+            ALPPaneUpload ALPPaneUploadControl = new ALPPaneUpload("Upload Presentation", Globals.RibbonAddIn.Application.ActiveWindow);
+            ALPPaneUploadControl.ALPPaneConfigure(450, 600, 450);
+            // MultipleChoice Custom Pane
+            ALPPaneMultipleChoice ALPPaneMultipleChoiceControl = new ALPPaneMultipleChoice("Multiple Choice", Globals.RibbonAddIn.Application.ActiveWindow);
+            ALPPaneMultipleChoiceControl.ALPPaneConfigure(500, 600, 300);
+            // ImageQuiz Custom Pane
+            ALPPaneImageQuiz ALPPaneImageQuizControl = new ALPPaneImageQuiz("Image Quiz", Globals.RibbonAddIn.Application.ActiveWindow);
+            ALPPaneImageQuizControl.ALPPaneConfigure(700, 900, 300);
+            // FreeResponse Custom Pane
+            ALPPaneFreeResponse ALPPaneFreeResponseControl = new ALPPaneFreeResponse("Free Response", Globals.RibbonAddIn.Application.ActiveWindow);
+            ALPPaneFreeResponseControl.ALPPaneConfigure(500, 600, 300);
         }
 
         // powerpoint events
@@ -183,25 +102,92 @@ namespace ALPRibbon
             _currentSlideNum = SldRange.SlideIndex;
             if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
             {
-                Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnInitialize();
+                foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList)
+                {
+                    if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                    {
+                        pane.OnInitialize();
+                    }
+                }
             }
             if (Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked)
             {
-                Globals.RibbonAddIn.ALPPaneImageQuizControl.OnInitialize();
+                foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList)
+                {
+                    if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                    {
+                        pane.OnInitialize();
+                    }
+                }
             }
             if (Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked)
             {
-                Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnInitialize();
+                foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList)
+                {
+                    if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                    {
+                        pane.OnInitialize();
+                    }
+                }
             }
         }
+        private void Application_PresentationNew(PowerPoint.Presentation Pres)
+        {
+            _currentSlideNum = 0;
+            CreateCustomPanes(Pres);
+        }
+
+        private void Application_PresentationOpen(PowerPoint.Presentation Pres)
+        {
+            _currentSlideNum = 0;
+            CreateCustomPanes(Pres);
+        }
+
         private void Application_PresentationClose(PowerPoint.Presentation Pres)
         {
             _currentSlideNum = 0;
-            ALPPaneLogInTaskPane.Visible = false;
-            ALPPaneUploadTaskPane.Visible = false;
-            ALPPaneMultipleChoiceTaskPane.Visible = false;
-            ALPPaneImageQuizTaskPane.Visible = false;
-            ALPPaneFreeResponseTaskPane.Visible = false;
+        }
+
+        private void Application_WindowActivate(PowerPoint.Presentation Pres, PowerPoint.DocumentWindow Wn)
+        {
+            foreach (ALPPaneLogIn pane in Globals.RibbonAddIn.ALPPaneLogInList) {
+                if (pane.DocWindow == Wn) {
+                    Globals.Ribbons.ALPRibbon.SignInButton.Checked = pane.TaskPane.Visible;
+                    break;
+                }
+            }
+            foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList)
+            {
+                if (pane.DocWindow == Wn)
+                {
+                    Globals.Ribbons.ALPRibbon.UploadButton.Checked = pane.TaskPane.Visible;
+                    break;
+                }
+            }
+            foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList)
+            {
+                if (pane.DocWindow == Wn)
+                {
+                    Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = pane.TaskPane.Visible;
+                    break;
+                }
+            }
+            foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList)
+            {
+                if (pane.DocWindow == Wn)
+                {
+                    Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = pane.TaskPane.Visible;
+                    break;
+                }
+            }
+            foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList)
+            {
+                if (pane.DocWindow == Wn)
+                {
+                    Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = pane.TaskPane.Visible;
+                    break;
+                }
+            }
         }
 
         // slideshow events
@@ -252,7 +238,7 @@ namespace ALPRibbon
             // clean  the export directory
             ALPGeneralUtils.ClearDirectory(RibbonAddIn.EXPORT_DIR);
         }
-
+/*
         private void ALPPaneLogInTaskPane_VisibleChanged(object sender, System.EventArgs e)
         {
             Globals.Ribbons.ALPRibbon.SignInButton.Checked = ALPPaneLogInTaskPane.Visible;
@@ -261,14 +247,7 @@ namespace ALPRibbon
         private void ALPPaneUploadTaskPane_VisibleChanged(object sender, System.EventArgs e)
         {
             Globals.Ribbons.ALPRibbon.UploadButton.Checked = ALPPaneUploadTaskPane.Visible;
- /*
-            if (ALPPaneUploadTaskPane.Visible == true)
-            {
-                var window = FindWindowW("MsoCommandBar", ALPPaneUploadTaskPane.Title); //MLHIDE
-                if (window == null) return;
-                MoveWindow(window, 600, 200, ALPPaneUploadTaskPane.Width, ALPPaneUploadTaskPane.Height, true);
-            }
-*/        }
+        }
 
         private void ALPPaneMultipleChoiceTaskPane_VisibleChanged(object sender, System.EventArgs e)
         {
@@ -308,7 +287,7 @@ namespace ALPRibbon
                 Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnExit();
             }
         }
-
+*/
         [DllImport("user32.dll", EntryPoint = "FindWindowW")]
         public static extern System.IntPtr FindWindowW([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpClassName, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpWindowName);
 

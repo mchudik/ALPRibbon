@@ -26,12 +26,22 @@ namespace ALPRibbon
 
         private void SignIn_Click(object sender, RibbonControlEventArgs e)
         {
-            Globals.RibbonAddIn.ALPLogInTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+            foreach (ALPPaneLogIn pane in Globals.RibbonAddIn.ALPPaneLogInList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.TaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+                    break;
+                }
+            }
         }
 
         private void UploadButton_Click(object sender, RibbonControlEventArgs e)
         {
-            Globals.RibbonAddIn.ALPUploadTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+            foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.TaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+                    break;
+                }
+            }
         }
 
         private void PublishButton_Click(object sender, RibbonControlEventArgs e)
@@ -42,17 +52,32 @@ namespace ALPRibbon
 
         private void MultipleChoiceButton_Click(object sender, RibbonControlEventArgs e)
         {
-            Globals.RibbonAddIn.ALPMultipleChoiceTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+            foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.TaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+                    break;
+                }
+            }
         }
 
         private void ImageQuizButton_Click(object sender, RibbonControlEventArgs e)
         {
-            Globals.RibbonAddIn.ALPImageQuizTaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+            foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.TaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+                    break;
+                }
+            }
         }
 
         private void FreeResponseButton_Click(object sender, RibbonControlEventArgs e)
         {
-            Globals.RibbonAddIn.ALPImageFreeResponsePane.Visible = ((RibbonToggleButton)sender).Checked;
+            foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.TaskPane.Visible = ((RibbonToggleButton)sender).Checked;
+                    break;
+                }
+            }
         }
     }
 }
