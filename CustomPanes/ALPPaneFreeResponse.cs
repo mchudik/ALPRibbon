@@ -30,7 +30,7 @@ namespace ALPRibbon
             TaskPane = Globals.RibbonAddIn.CustomTaskPanes.Add(this, strName, DocWindow);
             TaskPane.VisibleChanged += new EventHandler(ALPPane_VisibleChanged);
             Globals.RibbonAddIn.ALPPaneFreeResponseList.Add(this);
-            Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = false;
+            Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = true;
         }
 
         public void ALPPane_VisibleChanged(object sender, System.EventArgs e)

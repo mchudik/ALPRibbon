@@ -29,7 +29,7 @@ namespace ALPRibbon
             TaskPane = Globals.RibbonAddIn.CustomTaskPanes.Add(this, strName, DocWindow);
             TaskPane.VisibleChanged += new EventHandler(ALPPane_VisibleChanged);
             Globals.RibbonAddIn.ALPPaneUploadList.Add(this);
-            Globals.Ribbons.ALPRibbon.UploadButton.Checked = false;
+            Globals.Ribbons.ALPRibbon.UploadButton.Checked = true;
         }
 
         public void ALPPane_VisibleChanged(object sender, System.EventArgs e)

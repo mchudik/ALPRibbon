@@ -52,8 +52,8 @@ namespace ALPRibbon
                 new PowerPoint.EApplication_AfterNewPresentationEventHandler(Application_PresentationNew);
             this.Application.PresentationOpen +=
                 new PowerPoint.EApplication_PresentationOpenEventHandler(Application_PresentationOpen);
-            this.Application.PresentationCloseFinal +=
-                new PowerPoint.EApplication_PresentationCloseFinalEventHandler(Application_PresentationClose);
+            this.Application.PresentationClose +=
+                new PowerPoint.EApplication_PresentationCloseEventHandler(Application_PresentationClose);
             this.Application.WindowActivate +=
                 new PowerPoint.EApplication_WindowActivateEventHandler(Application_WindowActivate);
 
@@ -73,27 +73,59 @@ namespace ALPRibbon
             Directory.Delete(RibbonAddIn.WORKING_DIR, true);
         }
 
-        private void CreateCustomPanes(PowerPoint.Presentation Pres)
+        private void TurnOffButtons(PowerPoint.Presentation Pres)
+        {
+            if (Pres.Windows.Count > 0)
+            {
+                Globals.Ribbons.ALPRibbon.SignInButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.UploadButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = false;
+            }
+        }
+
+        private void DeleteCustomPanes(PowerPoint.Presentation Pres)
         {
             // If opening from template document might not exist
             if (Pres.Windows.Count == 0)
                 return;
 
-            // LogIn Custom Pane
-            ALPPaneLogIn ALPPaneLogInControl = new ALPPaneLogIn("User Sign In", Globals.RibbonAddIn.Application.ActiveWindow);
-            ALPPaneLogInControl.ALPPaneConfigure(275, 550, 275);
-            // Upload Custom Pane
-            ALPPaneUpload ALPPaneUploadControl = new ALPPaneUpload("Upload Presentation", Globals.RibbonAddIn.Application.ActiveWindow);
-            ALPPaneUploadControl.ALPPaneConfigure(450, 600, 450);
-            // MultipleChoice Custom Pane
-            ALPPaneMultipleChoice ALPPaneMultipleChoiceControl = new ALPPaneMultipleChoice("Multiple Choice", Globals.RibbonAddIn.Application.ActiveWindow);
-            ALPPaneMultipleChoiceControl.ALPPaneConfigure(500, 600, 300);
-            // ImageQuiz Custom Pane
-            ALPPaneImageQuiz ALPPaneImageQuizControl = new ALPPaneImageQuiz("Image Quiz", Globals.RibbonAddIn.Application.ActiveWindow);
-            ALPPaneImageQuizControl.ALPPaneConfigure(700, 900, 300);
-            // FreeResponse Custom Pane
-            ALPPaneFreeResponse ALPPaneFreeResponseControl = new ALPPaneFreeResponse("Free Response", Globals.RibbonAddIn.Application.ActiveWindow);
-            ALPPaneFreeResponseControl.ALPPaneConfigure(500, 600, 300);
+            foreach (ALPPaneLogIn pane in Globals.RibbonAddIn.ALPPaneLogInList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.SignInButton.Checked = false;
+                    break;
+                }
+            }
+            foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.UploadButton.Checked = false;
+                    break;
+                }
+            }
+            foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = false;
+                    break;
+                }
+            }
+            foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
+                    break;
+                }
+            }
+            foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList) {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = false;
+                    break;
+                }
+            }
         }
 
         // powerpoint events
@@ -134,56 +166,52 @@ namespace ALPRibbon
         private void Application_PresentationNew(PowerPoint.Presentation Pres)
         {
             _currentSlideNum = 0;
-            CreateCustomPanes(Pres);
+            TurnOffButtons(Pres);
         }
 
         private void Application_PresentationOpen(PowerPoint.Presentation Pres)
         {
             _currentSlideNum = 0;
-            CreateCustomPanes(Pres);
+            TurnOffButtons(Pres);
         }
 
         private void Application_PresentationClose(PowerPoint.Presentation Pres)
         {
             _currentSlideNum = 0;
+            DeleteCustomPanes(Pres);
         }
 
         private void Application_WindowActivate(PowerPoint.Presentation Pres, PowerPoint.DocumentWindow Wn)
         {
+            // Start with Off setting as Custom panes might not exist
+            TurnOffButtons(Pres);
+
             foreach (ALPPaneLogIn pane in Globals.RibbonAddIn.ALPPaneLogInList) {
                 if (pane.DocWindow == Wn) {
                     Globals.Ribbons.ALPRibbon.SignInButton.Checked = pane.TaskPane.Visible;
                     break;
                 }
             }
-            foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList)
-            {
-                if (pane.DocWindow == Wn)
-                {
+            foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList) {
+                if (pane.DocWindow == Wn) {
                     Globals.Ribbons.ALPRibbon.UploadButton.Checked = pane.TaskPane.Visible;
                     break;
                 }
             }
-            foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList)
-            {
-                if (pane.DocWindow == Wn)
-                {
+            foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList) {
+                if (pane.DocWindow == Wn) {
                     Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = pane.TaskPane.Visible;
                     break;
                 }
             }
-            foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList)
-            {
-                if (pane.DocWindow == Wn)
-                {
+            foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList) {
+                if (pane.DocWindow == Wn) {
                     Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = pane.TaskPane.Visible;
                     break;
                 }
             }
-            foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList)
-            {
-                if (pane.DocWindow == Wn)
-                {
+            foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList) {
+                if (pane.DocWindow == Wn) {
                     Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = pane.TaskPane.Visible;
                     break;
                 }

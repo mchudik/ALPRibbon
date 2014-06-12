@@ -31,7 +31,7 @@ namespace ALPRibbon
             TaskPane = Globals.RibbonAddIn.CustomTaskPanes.Add(this, strName, DocWindow);
             TaskPane.VisibleChanged += new EventHandler(ALPPane_VisibleChanged);
             Globals.RibbonAddIn.ALPPaneImageQuizList.Add(this);
-            Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
+            Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = true;
         }
 
         public void ALPPane_VisibleChanged(object sender, System.EventArgs e)
