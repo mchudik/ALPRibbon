@@ -255,6 +255,26 @@ namespace ALPRibbon
             }
         }
 
+        public static bool IsPlaceholderSlide(string strSlideType)
+        {
+            try
+            {
+                if (RibbonAddIn.ALPCurrentSlide <= 0)
+                    return false;
+
+                PowerPoint.Slide oSlide = Globals.RibbonAddIn.Application.ActivePresentation.Slides[RibbonAddIn.ALPCurrentSlide];
+                if (oSlide.Name.Contains(strSlideType))
+                    return true;
+                else
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+        }
+
         public static void RemoveShapeFromSlide(PowerPoint.Slide oSlide, string shapeAltText)
         {
             try
@@ -601,4 +621,37 @@ namespace ALPRibbon
         }
 
     }
+    
+    public class ALPCurrentWindow
+    {
+        private PowerPoint.DocumentWindow DocWindow;
+        private int SlideNumber;
+
+        // Current Document Window in focus
+        public PowerPoint.DocumentWindow currentWindow
+        {
+            get
+            {
+                return DocWindow;
+            }
+            set
+            {
+                DocWindow = value;
+            }
+        }
+
+        // Current Slide number for Current window
+        public int currentSlideNum
+        {
+            get
+            {
+                return SlideNumber;
+            }
+            set
+            {
+                SlideNumber = value;
+            }
+        }
+    }
+
 }

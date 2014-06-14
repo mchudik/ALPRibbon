@@ -36,7 +36,13 @@ namespace ALPRibbon
         public void ALPPane_VisibleChanged(object sender, System.EventArgs e)
         {
             if (DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+            {
                 Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = TaskPane.Visible;
+                if (TaskPane.Visible)
+                    InitVariables();
+                else
+                    ResetVariables();
+            }
         }
 
         public void ALPPaneConfigure(int floatingWidth, int floatingHeight, int dockedWidth)
@@ -108,7 +114,7 @@ namespace ALPRibbon
             QuestionTextBox.Text = "";
         }
 
-        public void OnInitialize()
+        public void InitVariables()
         {
             try
             {
@@ -133,24 +139,7 @@ namespace ALPRibbon
                 MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-        public void OnExit()
-        {
-            try
-            {
-                if (RibbonAddIn.ALPCurrentSlide <= 0)
-                    return;
 
-                if (Globals.RibbonAddIn.Application.Active == Microsoft.Office.Core.MsoTriState.msoTrue)
-                {
-                    // Clear all UI variables
-                    ResetVariables();
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
         private void AddVisibleShapes(PowerPoint.Slide oSlide)
         {
             try

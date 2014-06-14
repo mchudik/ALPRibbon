@@ -20,15 +20,44 @@ namespace ALPRibbon
         public static string DESKTOP_DIR = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
         // Presentation variables
-        private static int _currentSlideNum = 0;
         public bool bDebug = false;
+
+        // PPT Document Window List
+        private List<ALPCurrentWindow> ALPCurrentWindowList = new List<ALPCurrentWindow>();
 
         // Properties
         public static int ALPCurrentSlide
         {
             get
             {
-                return _currentSlideNum;
+                foreach (ALPCurrentWindow window in Globals.RibbonAddIn.ALPCurrentWindowList)
+                {
+                    if (window.currentWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                    {
+                        return window.currentSlideNum;
+                    }
+                }
+                // Add new Window
+                ALPCurrentWindow currentWindow = new ALPCurrentWindow();
+                currentWindow.currentWindow = Globals.RibbonAddIn.Application.ActiveWindow;
+                currentWindow.currentSlideNum = 0;
+                Globals.RibbonAddIn.ALPCurrentWindowList.Add(currentWindow);
+                return currentWindow.currentSlideNum = 0;
+            }
+            set
+            {
+                foreach (ALPCurrentWindow window in Globals.RibbonAddIn.ALPCurrentWindowList)
+                {
+                    if (window.currentWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                    {
+                        window.currentSlideNum = value;
+                    }
+                }
+                // Add new Window
+                ALPCurrentWindow currentWindow = new ALPCurrentWindow();
+                currentWindow.currentWindow = Globals.RibbonAddIn.Application.ActiveWindow;
+                currentWindow.currentSlideNum = value;
+                Globals.RibbonAddIn.ALPCurrentWindowList.Add(currentWindow);
             }
         }
 
@@ -73,72 +102,58 @@ namespace ALPRibbon
             Directory.Delete(RibbonAddIn.WORKING_DIR, true);
         }
 
-        private void TurnOffButtons(PowerPoint.Presentation Pres)
+        // PowerPoint events
+        private void Application_PresentationNew(PowerPoint.Presentation Pres)
         {
-            if (Pres.Windows.Count > 0)
-            {
-                Globals.Ribbons.ALPRibbon.SignInButton.Checked = false;
-                Globals.Ribbons.ALPRibbon.UploadButton.Checked = false;
-                Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = false;
-                Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
-                Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = false;
-            }
+            ALPCurrentSlide = 0;
+            TurnOffButtons(Pres);
         }
 
-        private void DeleteCustomPanes(PowerPoint.Presentation Pres)
+        private void Application_PresentationOpen(PowerPoint.Presentation Pres)
         {
-            // If opening from template document might not exist
-            if (Pres.Windows.Count == 0)
-                return;
-
-            foreach (ALPPaneLogIn pane in Globals.RibbonAddIn.ALPPaneLogInList) {
-                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
-                    pane.ALPPaneDelete();
-                    Globals.Ribbons.ALPRibbon.SignInButton.Checked = false;
-                    break;
-                }
-            }
-            foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList) {
-                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
-                    pane.ALPPaneDelete();
-                    Globals.Ribbons.ALPRibbon.UploadButton.Checked = false;
-                    break;
-                }
-            }
-            foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList) {
-                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
-                    pane.ALPPaneDelete();
-                    Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = false;
-                    break;
-                }
-            }
-            foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList) {
-                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
-                    pane.ALPPaneDelete();
-                    Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
-                    break;
-                }
-            }
-            foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList) {
-                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) {
-                    pane.ALPPaneDelete();
-                    Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = false;
-                    break;
-                }
-            }
+            ALPCurrentSlide = 0;
+            TurnOffButtons(Pres);
         }
 
-        // powerpoint events
+        private void Application_PresentationClose(PowerPoint.Presentation Pres)
+        {
+            DeleteCustomPanes(Pres);
+        }
+
         private void Application_SlideSelectionChanged(PowerPoint.SlideRange SldRange)
         {
-            _currentSlideNum = SldRange.SlideIndex;
+            // Set slide number in the current window
+            ALPCurrentSlide = SldRange.SlideIndex;
+
+            // Reflect change in all custom panes of current window
+            if (Globals.Ribbons.ALPRibbon.SignInButton.Checked)
+            {
+                foreach (ALPPaneLogIn pane in Globals.RibbonAddIn.ALPPaneLogInList)
+                {
+                    if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                    {
+                        pane.InitVariables();
+                    }
+                }
+            }
+            if (Globals.Ribbons.ALPRibbon.UploadButton.Checked)
+            {
+                foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList)
+                {
+                    if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                    {
+                        pane.InitVariables();
+                    }
+                }
+            }
             if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
             {
                 foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList)
                 {
                     if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
                     {
-                        pane.OnInitialize();
+                        pane.InitVariables();
+                        pane.TaskPane.Visible = ALPPowerpointUtils.IsPlaceholderSlide("Multiple_Choice");
                     }
                 }
             }
@@ -148,7 +163,8 @@ namespace ALPRibbon
                 {
                     if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
                     {
-                        pane.OnInitialize();
+                        pane.InitVariables();
+                        pane.TaskPane.Visible = ALPPowerpointUtils.IsPlaceholderSlide("Image_Quiz");
                     }
                 }
             }
@@ -158,27 +174,11 @@ namespace ALPRibbon
                 {
                     if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
                     {
-                        pane.OnInitialize();
+                        pane.InitVariables();
+                        pane.TaskPane.Visible = ALPPowerpointUtils.IsPlaceholderSlide("Free_Response");
                     }
                 }
             }
-        }
-        private void Application_PresentationNew(PowerPoint.Presentation Pres)
-        {
-            _currentSlideNum = 0;
-            TurnOffButtons(Pres);
-        }
-
-        private void Application_PresentationOpen(PowerPoint.Presentation Pres)
-        {
-            _currentSlideNum = 0;
-            TurnOffButtons(Pres);
-        }
-
-        private void Application_PresentationClose(PowerPoint.Presentation Pres)
-        {
-            _currentSlideNum = 0;
-            DeleteCustomPanes(Pres);
         }
 
         private void Application_WindowActivate(PowerPoint.Presentation Pres, PowerPoint.DocumentWindow Wn)
@@ -218,7 +218,7 @@ namespace ALPRibbon
             }
         }
 
-        // slideshow events
+        // SlideShow events
         void Application_SlideShowBegin(PowerPoint.SlideShowWindow wnd)
         {
         }
@@ -266,56 +266,73 @@ namespace ALPRibbon
             // clean  the export directory
             ALPGeneralUtils.ClearDirectory(RibbonAddIn.EXPORT_DIR);
         }
-/*
-        private void ALPPaneLogInTaskPane_VisibleChanged(object sender, System.EventArgs e)
-        {
-            Globals.Ribbons.ALPRibbon.SignInButton.Checked = ALPPaneLogInTaskPane.Visible;
-        }
 
-        private void ALPPaneUploadTaskPane_VisibleChanged(object sender, System.EventArgs e)
+        // Methods
+        private void TurnOffButtons(PowerPoint.Presentation Pres)
         {
-            Globals.Ribbons.ALPRibbon.UploadButton.Checked = ALPPaneUploadTaskPane.Visible;
-        }
-
-        private void ALPPaneMultipleChoiceTaskPane_VisibleChanged(object sender, System.EventArgs e)
-        {
-            Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = ALPPaneMultipleChoiceTaskPane.Visible;
-            if (Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked)
+            if (Pres.Windows.Count > 0)
             {
-                Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnInitialize();
-            }
-            else
-            {
-                Globals.RibbonAddIn.ALPPaneMultipleChoiceControl.OnExit();
+                Globals.Ribbons.ALPRibbon.SignInButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.UploadButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
+                Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = false;
             }
         }
 
-        private void ALPPaneImageQuizTaskPane_VisibleChanged(object sender, System.EventArgs e)
+        private void DeleteCustomPanes(PowerPoint.Presentation Pres)
         {
-            Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = ALPPaneImageQuizTaskPane.Visible;
-            if (Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked)
+            // If opening from template document might not exist
+            if (Pres.Windows.Count == 0)
+                return;
+
+            foreach (ALPPaneLogIn pane in Globals.RibbonAddIn.ALPPaneLogInList)
             {
-                Globals.RibbonAddIn.ALPPaneImageQuizControl.OnInitialize();
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.SignInButton.Checked = false;
+                    break;
+                }
             }
-            else
+            foreach (ALPPaneUpload pane in Globals.RibbonAddIn.ALPPaneUploadList)
             {
-                Globals.RibbonAddIn.ALPPaneImageQuizControl.OnExit();
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.UploadButton.Checked = false;
+                    break;
+                }
+            }
+            foreach (ALPPaneMultipleChoice pane in Globals.RibbonAddIn.ALPPaneMultipleChoiceList)
+            {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.MultipleChoiceButton.Checked = false;
+                    break;
+                }
+            }
+            foreach (ALPPaneImageQuiz pane in Globals.RibbonAddIn.ALPPaneImageQuizList)
+            {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.ImageQuizButton.Checked = false;
+                    break;
+                }
+            }
+            foreach (ALPPaneFreeResponse pane in Globals.RibbonAddIn.ALPPaneFreeResponseList)
+            {
+                if (pane.DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+                {
+                    pane.ALPPaneDelete();
+                    Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = false;
+                    break;
+                }
             }
         }
 
-        private void ALPPaneFreeResponseTaskPane_VisibleChanged(object sender, System.EventArgs e)
-        {
-            Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked = ALPPaneFreeResponseTaskPane.Visible;
-            if (Globals.Ribbons.ALPRibbon.FreeResponseButton.Checked)
-            {
-                Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnInitialize();
-            }
-            else
-            {
-                Globals.RibbonAddIn.ALPPaneFreeResponseControl.OnExit();
-            }
-        }
-*/
         [DllImport("user32.dll", EntryPoint = "FindWindowW")]
         public static extern System.IntPtr FindWindowW([System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpClassName, [System.Runtime.InteropServices.InAttribute()] [System.Runtime.InteropServices.MarshalAsAttribute(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lpWindowName);
 

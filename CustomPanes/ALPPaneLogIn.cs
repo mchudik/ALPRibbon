@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using Tools = Microsoft.Office.Tools;
+using ALPRibbon.Properties;
 
 namespace ALPRibbon
 {
@@ -34,8 +35,14 @@ namespace ALPRibbon
 
         public void ALPPane_VisibleChanged(object sender, System.EventArgs e)
         {
-            if (DocWindow == Globals.RibbonAddIn.Application.ActiveWindow)
+            if (DocWindow == Globals.RibbonAddIn.Application.ActiveWindow) 
+            {
                 Globals.Ribbons.ALPRibbon.SignInButton.Checked = TaskPane.Visible;
+                if (TaskPane.Visible)
+                    InitVariables();
+                else
+                    ResetVariables();
+            }
         }
 
         public void ALPPaneConfigure(int floatingWidth, int floatingHeight, int dockedWidth)
@@ -57,6 +64,22 @@ namespace ALPRibbon
             TaskPane.Dispose();
             Globals.RibbonAddIn.ALPPaneLogInList.Remove(this);
             this.Dispose();
+        }
+
+        private void ResetVariables()
+        {
+        }
+
+        public void InitVariables()
+        {
+            try
+            {
+
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
