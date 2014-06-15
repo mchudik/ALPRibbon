@@ -105,13 +105,13 @@ namespace ALPRibbon
         // PowerPoint events
         private void Application_PresentationNew(PowerPoint.Presentation Pres)
         {
-            ALPCurrentSlide = 0;
+            ALPCurrentSlide = 1;
             TurnOffButtons(Pres);
         }
 
         private void Application_PresentationOpen(PowerPoint.Presentation Pres)
         {
-            ALPCurrentSlide = 0;
+            ALPCurrentSlide = 1;
             TurnOffButtons(Pres);
         }
 

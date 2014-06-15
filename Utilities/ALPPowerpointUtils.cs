@@ -456,17 +456,17 @@ namespace ALPRibbon
             }
         }
 
-        public static string WriteImageQuizXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static string WriteImageQuizXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             using (var ms = new MemoryStream())
             using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
             {
-                WriteImageQuizXML(xmlString, oPres, CurentSlideId, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                WriteImageQuizXML(xmlString, oPres, CurentSlideId, QuestionTextBox, SolutionRect, AddJustificationCheckBox, JustificationTextBox);
                 return System.Text.Encoding.UTF8.GetString(ms.ToArray());
             }
         }
 
-        public static void WriteImageQuizXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void WriteImageQuizXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             try
             {
@@ -483,6 +483,13 @@ namespace ALPRibbon
                 xmlTextWriter.WriteStartElement("question");
                 xmlTextWriter.WriteAttributeString("text", QuestionTextBox.Text);
                 xmlTextWriter.WriteEndElement();  //question
+
+                xmlTextWriter.WriteStartElement("solution_rectangle");
+                xmlTextWriter.WriteAttributeString("left", SolutionRect.Left.ToString());
+                xmlTextWriter.WriteAttributeString("top", SolutionRect.Top.ToString());
+                xmlTextWriter.WriteAttributeString("right", SolutionRect.Right.ToString());
+                xmlTextWriter.WriteAttributeString("bottom", SolutionRect.Bottom.ToString());
+                xmlTextWriter.WriteEndElement();  //solution_rectangle
 
                 xmlTextWriter.WriteStartElement("justification");
                 xmlTextWriter.WriteAttributeString("text", JustificationTextBox.Text);
@@ -501,16 +508,16 @@ namespace ALPRibbon
             }
         }
 
-        public static void ReadImageQuizXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadImageQuizXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, ref Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
             using (XmlTextReader xmlString = new XmlTextReader(ms))
             {
-                ReadImageQuizXML(xmlString, CurentSlideId, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                ReadImageQuizXML(xmlString, CurentSlideId, QuestionTextBox, ref SolutionRect, AddJustificationCheckBox, JustificationTextBox);
             }
         }
 
-        public static void ReadImageQuizXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadImageQuizXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, ref Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
         {
             try
             {
@@ -528,6 +535,14 @@ namespace ALPRibbon
                         if (xmlTextReader.Name == "question")
                         {
                             QuestionTextBox.Text = xmlTextReader.GetAttribute("text");
+                        }
+                        if (xmlTextReader.Name == "solution_rectangle")
+                        {
+                            int nLeft = Convert.ToInt32(xmlTextReader.GetAttribute("left"));
+                            int nTop = Convert.ToInt32(xmlTextReader.GetAttribute("top"));
+                            int nRight = Convert.ToInt32(xmlTextReader.GetAttribute("right"));
+                            int nBottom = Convert.ToInt32(xmlTextReader.GetAttribute("bottom"));
+                            SolutionRect = Rectangle.FromLTRB(nLeft, nTop, nRight, nBottom);
                         }
                         if (xmlTextReader.Name == "justification")
                         {

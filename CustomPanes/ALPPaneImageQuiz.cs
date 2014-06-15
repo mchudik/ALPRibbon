@@ -74,6 +74,21 @@ namespace ALPRibbon
                 if (RibbonAddIn.ALPCurrentSlide <= 0)
                     return;
 
+                // Mark the solution if not saved yet
+                bMarked = true;
+                using (Pen p = new Pen(Color.Green, 2.0F))
+                {
+                    if (ImagePictureBox.Image != null)
+                    {
+                        // Draw the rectangle
+                        using (Graphics g = Graphics.FromImage(ImagePictureBox.Image))
+                        {
+                            g.DrawRectangle(p, SolutionRect);
+                        }
+                    }
+                }
+                ImagePictureBox.Invalidate(true);
+
                 PowerPoint.Slide oSlide = ALPPowerpointUtils.GetOrInsertPlaceholderSlide("Image_Quiz");
                 if (oSlide != null)
                 {
@@ -150,7 +165,8 @@ namespace ALPRibbon
                 {
                     if (shape.AlternativeText.Equals("ImageQuizPollXML"))
                     {
-                        ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                        SolutionRect = Rectangle.FromLTRB(0, 0, 0, 0);
+                        ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, ref SolutionRect, AddJustificationCheckBox, JustificationTextBox);
                     }
                     if (shape.AlternativeText.Equals("ImageQuizPollImageMTD"))
                     {
@@ -158,6 +174,8 @@ namespace ALPRibbon
                         ImageNameLabel.Text = Path.GetFileName(shape.LinkFormat.SourceFullName);
                     }
                 }
+                bMarked = true;
+                ImagePictureBox.Invalidate(true);
             }
             catch (Exception ex)
             {
@@ -191,7 +209,14 @@ namespace ALPRibbon
                 // Add Visible Image
                 if (ImagePictureBox.ImageLocation != null)
                 {
-                    PowerPoint.Shape oShapePicture = oShapes.AddPicture(ImagePictureBox.ImageLocation, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0);
+                    // Export the image with ROI to a bitmap
+                    string strFileName = ImagePictureBox.ImageLocation;
+                    if (ImagePictureBox.Image != null)
+                    {
+                        strFileName = RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\" + ImageNameLabel.Text;
+                        ImagePictureBox.Image.Save(strFileName);
+                    }
+                    PowerPoint.Shape oShapePicture = oShapes.AddPicture(strFileName, Microsoft.Office.Core.MsoTriState.msoFalse, Microsoft.Office.Core.MsoTriState.msoTrue, 0, 0);
                     oShapePicture.Width = 8 * (nSlideWidth / 10);
                     if (AddJustificationCheckBox.Checked)
                         oShapePicture.Height = 6 * (nSlideHeight / 10);
@@ -230,7 +255,7 @@ namespace ALPRibbon
             try
             {
                 // Add XML Placeholder shape for this poll
-                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AddJustificationCheckBox, JustificationTextBox);
+                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, SolutionRect, AddJustificationCheckBox, JustificationTextBox);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeTextXML = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRangeXML = oShapeTextXML.TextFrame.TextRange;
@@ -272,12 +297,14 @@ namespace ALPRibbon
             }
         }
 
+        // Image Drawing section
         private Point initialMousePos;
         private Point initialImagePos;
         private Point currentMousePos;
         private bool bDrawing = false;
+        private bool bDrawn = false;
         private bool bMarked = false;
-        private Rectangle solutionRect;
+        private Rectangle SolutionRect;
 
         private Point ImageMousePos(Point p)
         {
@@ -287,32 +314,32 @@ namespace ALPRibbon
                 if (ImagePictureBox.Image == null) return unscaled_p;
 
                 // image and container dimensions
-                int w_i = ImagePictureBox.Image.Width;
-                int h_i = ImagePictureBox.Image.Height;
-                int w_c = ImagePictureBox.Width;
-                int h_c = ImagePictureBox.Height;
+                float w_i = ImagePictureBox.Image.Width;
+                float h_i = ImagePictureBox.Image.Height;
+                float w_c = ImagePictureBox.ClientSize.Width;
+                float h_c = ImagePictureBox.ClientSize.Height;
 
-                float imageRatio = w_i / (float)h_i; // image W:H ratio
-                float containerRatio = w_c / (float)h_c; // container W:H ratio
+                float imageRatio = w_i / h_i; // image W:H ratio
+                float containerRatio = w_c / h_c; // container W:H ratio
 
                 if (imageRatio >= containerRatio)
                 {
                     // horizontal image
-                    float scaleFactor = w_c / (float)w_i;
+                    float scaleFactor = w_c / w_i;
                     float scaledHeight = h_i * scaleFactor;
                     // calculate gap between top of container and top of image
                     float filler = Math.Abs(h_c - scaledHeight) / 2;
-                    unscaled_p.X = (int)(p.X / scaleFactor);
-                    unscaled_p.Y = (int)((p.Y - filler) / scaleFactor);
+                    unscaled_p.X = (int)((float)p.X / scaleFactor);
+                    unscaled_p.Y = (int)(((float)p.Y - filler) / scaleFactor);
                 }
                 else
                 {
                     // vertical image
-                    float scaleFactor = h_c / (float)h_i;
+                    float scaleFactor = h_c / h_i;
                     float scaledWidth = w_i * scaleFactor;
                     float filler = Math.Abs(w_c - scaledWidth) / 2;
-                    unscaled_p.X = (int)((p.X - filler) / scaleFactor);
-                    unscaled_p.Y = (int)(p.Y / scaleFactor);
+                    unscaled_p.X = (int)(((float)p.X - filler) / scaleFactor);
+                    unscaled_p.Y = (int)((float)p.Y / scaleFactor);
                 }
 
                 return unscaled_p;
@@ -347,12 +374,21 @@ namespace ALPRibbon
             {
                 if (!bDrawing)
                     return;
+                
+                if (ImagePictureBox.Image == null)
+                    return;
 
                 // Save the final position of the mouse
                 Point finalImagePos = ImageMousePos(e.Location);
 
+                // Adjust the final rectangle to fit the image
+                if (this.initialImagePos.X < 0) this.initialImagePos.X = 0;
+                if (this.initialImagePos.Y < 0) this.initialImagePos.Y = 0;
+                if (finalImagePos.X >= ImagePictureBox.Image.Width) finalImagePos.X = ImagePictureBox.Image.Width;
+                if (finalImagePos.Y >= ImagePictureBox.Image.Height) finalImagePos.Y = ImagePictureBox.Image.Height;
+
                 // Create the rectangle from the two points
-                solutionRect = Rectangle.FromLTRB(
+                SolutionRect = Rectangle.FromLTRB(
                                                     this.initialImagePos.X,
                                                     this.initialImagePos.Y,
                                                     finalImagePos.X,
@@ -361,6 +397,9 @@ namespace ALPRibbon
                 // Do whatever you want with the rectangle here
                 // ...
                 bDrawing = false;
+                // Automatinc Image snapping and final Marking
+                bDrawn = true;
+                ImagePictureBox.Invalidate(true);
             }
             catch (Exception ex)
             {
@@ -411,6 +450,22 @@ namespace ALPRibbon
                 }
                 else
                 {
+                    if (bDrawn == true)
+                    {
+                        using (Pen p = new Pen(Color.Red, 2.0F))
+                        {
+                            if (ImagePictureBox.Image != null)
+                            {
+                                // Draw the rectangle
+                                using (Graphics g = Graphics.FromImage(ImagePictureBox.Image))
+                                {
+                                    g.DrawRectangle(p, SolutionRect);
+                                }
+                            }
+                        }
+                        bDrawn = false;
+                        ImagePictureBox.Invalidate(true);
+                    }
                     if (bMarked == true)
                     {
                         using (Pen p = new Pen(Color.Green, 2.0F))
@@ -420,12 +475,12 @@ namespace ALPRibbon
                                 // Draw the rectangle
                                 using (Graphics g = Graphics.FromImage(ImagePictureBox.Image))
                                 {
-                                    g.DrawRectangle(p, solutionRect);
+                                    g.DrawRectangle(p, SolutionRect);
                                 }
                             }
                         }
                         bMarked = false;
-                        ImagePictureBox.Invalidate();
+                        ImagePictureBox.Invalidate(true);
                     }
                 }
             }
