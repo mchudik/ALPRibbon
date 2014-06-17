@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using ALPRibbon.Properties;
+using System.IO;
 using Tools = Microsoft.Office.Tools;
 
 namespace ALPRibbon
@@ -106,12 +107,15 @@ namespace ALPRibbon
             SubmitButton.Width = PaddedWidth;
 
             // Dynamic Height Calculation
+            AttachFileLabel.Top = this.Height - 80;
+            AttachFileName.Top = this.Height - 80;
             SubmitButton.Top = this.Height - 51;
         }
 
         private void ResetVariables()
         {
             QuestionTextBox.Text = "";
+            AttachFileName.Text = "Click To Select";
         }
 
         public void InitVariables()
@@ -130,7 +134,7 @@ namespace ALPRibbon
                 {
                     if (shape.AlternativeText.Equals("FreeResponsePollXML"))
                     {
-                        ALPPowerpointUtils.ReadFreeResponseXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox);
+                        ALPPowerpointUtils.ReadFreeResponseXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AttachFileName);
                     }
                 }
             }
@@ -174,7 +178,7 @@ namespace ALPRibbon
             try
             {
                 // Add XML Placeholder shape for this poll
-                string textXML = ALPPowerpointUtils.WriteFreeResponseXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox);
+                string textXML = ALPPowerpointUtils.WriteFreeResponseXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, AttachFileName);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeTextXML = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRangeXML = oShapeTextXML.TextFrame.TextRange;
@@ -187,6 +191,24 @@ namespace ALPRibbon
                 if (Globals.RibbonAddIn.bDebug == false)
                     oShapeTextXML.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
                 oShapeTextXML.AlternativeText = "FreeResponsePollXML";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AttachFileName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDlg = new OpenFileDialog();
+                openFileDlg.Filter = "All files (*.*)|*.*";
+                if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    AttachFileName.Tag = openFileDlg.FileName;
+                    AttachFileName.Text = Path.GetFileName(openFileDlg.FileName);
+                }
             }
             catch (Exception ex)
             {

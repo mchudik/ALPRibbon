@@ -37,7 +37,8 @@
             this.ImagePictureBox = new System.Windows.Forms.PictureBox();
             this.ImageLabel = new System.Windows.Forms.Label();
             this.ImageNameLabel = new System.Windows.Forms.LinkLabel();
-            this.MarkSolutionButton = new System.Windows.Forms.Button();
+            this.AttachFileName = new System.Windows.Forms.LinkLabel();
+            this.AttachFileLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ImagePictureBox)).BeginInit();
             this.SuspendLayout();
             // 
@@ -138,22 +139,35 @@
             this.ImageNameLabel.Text = "Click To Select";
             this.ImageNameLabel.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ImageNameLabel_LinkClicked);
             // 
-            // MarkSolutionButton
+            // AttachFileName
             // 
-            this.MarkSolutionButton.Location = new System.Drawing.Point(21, 374);
-            this.MarkSolutionButton.Name = "MarkSolutionButton";
-            this.MarkSolutionButton.Size = new System.Drawing.Size(578, 29);
-            this.MarkSolutionButton.TabIndex = 24;
-            this.MarkSolutionButton.Text = "Mark Solution";
-            this.MarkSolutionButton.UseVisualStyleBackColor = true;
-            this.MarkSolutionButton.Click += new System.EventHandler(this.MarkSolutionButton_Click);
+            this.AttachFileName.AutoSize = true;
+            this.AttachFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AttachFileName.Location = new System.Drawing.Point(100, 376);
+            this.AttachFileName.Name = "AttachFileName";
+            this.AttachFileName.Size = new System.Drawing.Size(108, 18);
+            this.AttachFileName.TabIndex = 29;
+            this.AttachFileName.TabStop = true;
+            this.AttachFileName.Text = "Click To Select";
+            this.AttachFileName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AttachFileName_LinkClicked);
+            // 
+            // AttachFileLabel
+            // 
+            this.AttachFileLabel.AutoSize = true;
+            this.AttachFileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AttachFileLabel.Location = new System.Drawing.Point(21, 376);
+            this.AttachFileLabel.Name = "AttachFileLabel";
+            this.AttachFileLabel.Size = new System.Drawing.Size(76, 18);
+            this.AttachFileLabel.TabIndex = 28;
+            this.AttachFileLabel.Text = "Attach File";
             // 
             // ALPPaneImageQuiz
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.Controls.Add(this.MarkSolutionButton);
+            this.Controls.Add(this.AttachFileName);
+            this.Controls.Add(this.AttachFileLabel);
             this.Controls.Add(this.ImageNameLabel);
             this.Controls.Add(this.ImageLabel);
             this.Controls.Add(this.ImagePictureBox);
@@ -183,6 +197,7 @@
         private System.Windows.Forms.PictureBox ImagePictureBox;
         private System.Windows.Forms.Label ImageLabel;
         private System.Windows.Forms.LinkLabel ImageNameLabel;
-        private System.Windows.Forms.Button MarkSolutionButton;
+        private System.Windows.Forms.LinkLabel AttachFileName;
+        private System.Windows.Forms.Label AttachFileLabel;
     }
 }

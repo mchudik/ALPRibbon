@@ -32,14 +32,15 @@
             this.QuestionTextBox = new System.Windows.Forms.TextBox();
             this.AnswersLabel = new System.Windows.Forms.Label();
             this.JustificationTextBox = new System.Windows.Forms.TextBox();
-            this.JustificationLabel = new System.Windows.Forms.Label();
             this.AddJustificationCheckBox = new System.Windows.Forms.CheckBox();
             this.AnswerDescTextBox = new System.Windows.Forms.TextBox();
             this.JustificationDescTextBox = new System.Windows.Forms.TextBox();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.SubmitButton = new System.Windows.Forms.Button();
             this.Correct = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Answer = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SubmitButton = new System.Windows.Forms.Button();
+            this.AttachFileName = new System.Windows.Forms.LinkLabel();
+            this.AttachFileLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -66,7 +67,7 @@
             // 
             this.AnswersLabel.AutoSize = true;
             this.AnswersLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.AnswersLabel.Location = new System.Drawing.Point(18, 103);
+            this.AnswersLabel.Location = new System.Drawing.Point(18, 85);
             this.AnswersLabel.Name = "AnswersLabel";
             this.AnswersLabel.Size = new System.Drawing.Size(65, 18);
             this.AnswersLabel.TabIndex = 5;
@@ -80,16 +81,6 @@
             this.JustificationTextBox.Size = new System.Drawing.Size(578, 40);
             this.JustificationTextBox.TabIndex = 7;
             this.JustificationTextBox.Text = "Briefly explain your answer.";
-            // 
-            // JustificationLabel
-            // 
-            this.JustificationLabel.AutoSize = true;
-            this.JustificationLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.JustificationLabel.Location = new System.Drawing.Point(18, 342);
-            this.JustificationLabel.Name = "JustificationLabel";
-            this.JustificationLabel.Size = new System.Drawing.Size(86, 18);
-            this.JustificationLabel.TabIndex = 6;
-            this.JustificationLabel.Text = "Justification";
             // 
             // AddJustificationCheckBox
             // 
@@ -106,7 +97,7 @@
             this.AnswerDescTextBox.BackColor = System.Drawing.SystemColors.ControlLight;
             this.AnswerDescTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.AnswerDescTextBox.Enabled = false;
-            this.AnswerDescTextBox.Location = new System.Drawing.Point(21, 124);
+            this.AnswerDescTextBox.Location = new System.Drawing.Point(21, 106);
             this.AnswerDescTextBox.Multiline = true;
             this.AnswerDescTextBox.Name = "AnswerDescTextBox";
             this.AnswerDescTextBox.Size = new System.Drawing.Size(578, 21);
@@ -131,21 +122,11 @@
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Correct,
             this.Answer});
-            this.dataGridView.Location = new System.Drawing.Point(21, 151);
+            this.dataGridView.Location = new System.Drawing.Point(21, 133);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(578, 172);
+            this.dataGridView.Size = new System.Drawing.Size(578, 190);
             this.dataGridView.TabIndex = 19;
-            // 
-            // SubmitButton
-            // 
-            this.SubmitButton.Location = new System.Drawing.Point(21, 471);
-            this.SubmitButton.Name = "SubmitButton";
-            this.SubmitButton.Size = new System.Drawing.Size(578, 29);
-            this.SubmitButton.TabIndex = 20;
-            this.SubmitButton.Text = "Submit";
-            this.SubmitButton.UseVisualStyleBackColor = true;
-            this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
             // Correct
             // 
@@ -161,18 +142,51 @@
             this.Answer.HeaderText = "Answer";
             this.Answer.Name = "Answer";
             // 
+            // SubmitButton
+            // 
+            this.SubmitButton.Location = new System.Drawing.Point(21, 471);
+            this.SubmitButton.Name = "SubmitButton";
+            this.SubmitButton.Size = new System.Drawing.Size(578, 29);
+            this.SubmitButton.TabIndex = 20;
+            this.SubmitButton.Text = "Submit";
+            this.SubmitButton.UseVisualStyleBackColor = true;
+            this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
+            // 
+            // AttachFileName
+            // 
+            this.AttachFileName.AutoSize = true;
+            this.AttachFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AttachFileName.Location = new System.Drawing.Point(100, 330);
+            this.AttachFileName.Name = "AttachFileName";
+            this.AttachFileName.Size = new System.Drawing.Size(108, 18);
+            this.AttachFileName.TabIndex = 27;
+            this.AttachFileName.TabStop = true;
+            this.AttachFileName.Text = "Click To Select";
+            this.AttachFileName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AttachFileName_LinkClicked);
+            // 
+            // AttachFileLabel
+            // 
+            this.AttachFileLabel.AutoSize = true;
+            this.AttachFileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AttachFileLabel.Location = new System.Drawing.Point(21, 330);
+            this.AttachFileLabel.Name = "AttachFileLabel";
+            this.AttachFileLabel.Size = new System.Drawing.Size(76, 18);
+            this.AttachFileLabel.TabIndex = 26;
+            this.AttachFileLabel.Text = "Attach File";
+            // 
             // ALPPaneMultipleChoice
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.Controls.Add(this.AttachFileName);
+            this.Controls.Add(this.AttachFileLabel);
             this.Controls.Add(this.SubmitButton);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.JustificationDescTextBox);
             this.Controls.Add(this.AnswerDescTextBox);
             this.Controls.Add(this.AddJustificationCheckBox);
             this.Controls.Add(this.JustificationTextBox);
-            this.Controls.Add(this.JustificationLabel);
             this.Controls.Add(this.AnswersLabel);
             this.Controls.Add(this.QuestionTextBox);
             this.Controls.Add(this.QuestionLabel);
@@ -191,7 +205,6 @@
         private System.Windows.Forms.TextBox QuestionTextBox;
         private System.Windows.Forms.Label AnswersLabel;
         private System.Windows.Forms.TextBox JustificationTextBox;
-        private System.Windows.Forms.Label JustificationLabel;
         private System.Windows.Forms.CheckBox AddJustificationCheckBox;
         private System.Windows.Forms.TextBox AnswerDescTextBox;
         private System.Windows.Forms.TextBox JustificationDescTextBox;
@@ -199,5 +212,7 @@
         private System.Windows.Forms.Button SubmitButton;
         private System.Windows.Forms.DataGridViewCheckBoxColumn Correct;
         private System.Windows.Forms.DataGridViewTextBoxColumn Answer;
+        private System.Windows.Forms.LinkLabel AttachFileName;
+        private System.Windows.Forms.Label AttachFileLabel;
     }
 }

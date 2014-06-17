@@ -314,25 +314,25 @@ namespace ALPRibbon
             }
         }
 
-        public static string WriteMultiQuestionXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static string WriteMultiQuestionXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             using (var ms = new MemoryStream())
             using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
             {
-                WriteMultiQuestionXML(xmlString, oPres, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+                WriteMultiQuestionXML(xmlString, oPres, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
                 return System.Text.Encoding.UTF8.GetString(ms.ToArray());
             }
         }
 
-        public static void WriteMultiQuestionXMLFile(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void WriteMultiQuestionXMLFile(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             using (XmlTextWriter xmlFile = new XmlTextWriter(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\LecturePolls.xml", System.Text.Encoding.UTF8))
             {
-                WriteMultiQuestionXML(xmlFile, oPres, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+                WriteMultiQuestionXML(xmlFile, oPres, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
             }
         }
 
-        public static void WriteMultiQuestionXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void WriteMultiQuestionXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             try
             {
@@ -381,6 +381,10 @@ namespace ALPRibbon
                 xmlTextWriter.WriteAttributeString("required", AddJustificationCheckBox.Checked.ToString());
                 xmlTextWriter.WriteEndElement();  //justification
 
+                xmlTextWriter.WriteStartElement("attached_file");
+                xmlTextWriter.WriteAttributeString("pathname", (string)AttachFileName.Tag);
+                xmlTextWriter.WriteEndElement();  //attached_file
+
                 xmlTextWriter.WriteEndElement();  //poll
 
                 // Close elements
@@ -397,24 +401,24 @@ namespace ALPRibbon
             }
         }
 
-        public static void ReadMultiQuestionXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadMultiQuestionXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
             using (XmlTextReader xmlString = new XmlTextReader(ms))
             {
-                ReadMultiQuestionXML(xmlString, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+                ReadMultiQuestionXML(xmlString, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
             }
         }
 
-        public static void ReadMultiQuestionXMLFile(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadMultiQuestionXMLFile(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             using (XmlTextReader xmlFile = new XmlTextReader(RibbonAddIn.WORKING_DIR + "\\" + RibbonAddIn.EXPORT_DIR + "\\LecturePolls.xml"))
             {
-                ReadMultiQuestionXML(xmlFile, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+                ReadMultiQuestionXML(xmlFile, CurentSlideId, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
             }
         }
 
-        public static void ReadMultiQuestionXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadMultiQuestionXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, DataGridView dataGridView, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             try
             {
@@ -447,6 +451,13 @@ namespace ALPRibbon
                             JustificationTextBox.Text = xmlTextReader.GetAttribute("text");
                             AddJustificationCheckBox.Checked = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("required").ToLower());
                         }
+                        if (xmlTextReader.Name == "attached_file")
+                        {
+                            AttachFileName.Tag = xmlTextReader.GetAttribute("pathname");
+                            AttachFileName.Text = Path.GetFileName((string)AttachFileName.Tag);
+                            if (AttachFileName.Text.Length == 0)
+                                AttachFileName.Text = "Click To Select";
+                        }
                     }
                 }
             }
@@ -456,17 +467,17 @@ namespace ALPRibbon
             }
         }
 
-        public static string WriteImageQuizXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static string WriteImageQuizXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             using (var ms = new MemoryStream())
             using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
             {
-                WriteImageQuizXML(xmlString, oPres, CurentSlideId, QuestionTextBox, SolutionRect, AddJustificationCheckBox, JustificationTextBox);
+                WriteImageQuizXML(xmlString, oPres, CurentSlideId, QuestionTextBox, SolutionRect, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
                 return System.Text.Encoding.UTF8.GetString(ms.ToArray());
             }
         }
 
-        public static void WriteImageQuizXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void WriteImageQuizXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             try
             {
@@ -496,6 +507,10 @@ namespace ALPRibbon
                 xmlTextWriter.WriteAttributeString("required", AddJustificationCheckBox.Checked.ToString());
                 xmlTextWriter.WriteEndElement();  //justification
 
+                xmlTextWriter.WriteStartElement("attached_file");
+                xmlTextWriter.WriteAttributeString("pathname", (string)AttachFileName.Tag);
+                xmlTextWriter.WriteEndElement();  //attached_file
+
                 xmlTextWriter.WriteEndElement();  //poll
 
                 // Write the XML to file and close the xmlFile.
@@ -508,16 +523,16 @@ namespace ALPRibbon
             }
         }
 
-        public static void ReadImageQuizXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, ref Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadImageQuizXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, ref Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
             using (XmlTextReader xmlString = new XmlTextReader(ms))
             {
-                ReadImageQuizXML(xmlString, CurentSlideId, QuestionTextBox, ref SolutionRect, AddJustificationCheckBox, JustificationTextBox);
+                ReadImageQuizXML(xmlString, CurentSlideId, QuestionTextBox, ref SolutionRect, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
             }
         }
 
-        public static void ReadImageQuizXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, ref Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox)
+        public static void ReadImageQuizXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, ref Rectangle SolutionRect, CheckBox AddJustificationCheckBox, TextBox JustificationTextBox, LinkLabel AttachFileName)
         {
             try
             {
@@ -549,6 +564,13 @@ namespace ALPRibbon
                             JustificationTextBox.Text = xmlTextReader.GetAttribute("text");
                             AddJustificationCheckBox.Checked = XmlConvert.ToBoolean(xmlTextReader.GetAttribute("required").ToLower());
                         }
+                        if (xmlTextReader.Name == "attached_file")
+                        {
+                            AttachFileName.Tag = xmlTextReader.GetAttribute("pathname");
+                            AttachFileName.Text = Path.GetFileName((string)AttachFileName.Tag);
+                            if(AttachFileName.Text. Length == 0)
+                                AttachFileName.Text = "Click To Select";
+                        }
                     }
                 }
             }
@@ -558,17 +580,17 @@ namespace ALPRibbon
             }
         }
 
-        public static string WriteFreeResponseXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox)
+        public static string WriteFreeResponseXMLString(PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, LinkLabel AttachFileName)
         {
             using (var ms = new MemoryStream())
             using (XmlTextWriter xmlString = new XmlTextWriter(ms, System.Text.Encoding.UTF8))
             {
-                WriteFreeResponseXML(xmlString, oPres, CurentSlideId, QuestionTextBox);
+                WriteFreeResponseXML(xmlString, oPres, CurentSlideId, QuestionTextBox, AttachFileName);
                 return System.Text.Encoding.UTF8.GetString(ms.ToArray());
             }
         }
 
-        public static void WriteFreeResponseXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox)
+        public static void WriteFreeResponseXML(XmlTextWriter xmlTextWriter, PowerPoint.Presentation oPres, int CurentSlideId, TextBox QuestionTextBox, LinkLabel AttachFileName)
         {
             try
             {
@@ -586,6 +608,10 @@ namespace ALPRibbon
                 xmlTextWriter.WriteAttributeString("text", QuestionTextBox.Text);
                 xmlTextWriter.WriteEndElement();  //question
 
+                xmlTextWriter.WriteStartElement("attached_file");
+                xmlTextWriter.WriteAttributeString("pathname", (string)AttachFileName.Tag);
+                xmlTextWriter.WriteEndElement();  //attached_file
+
                 xmlTextWriter.WriteEndElement();  //poll
 
                 // Write the XML to file and close the xmlFile.
@@ -598,16 +624,16 @@ namespace ALPRibbon
             }
         }
 
-        public static void ReadFreeResponseXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox)
+        public static void ReadFreeResponseXMLString(string stringXML, int CurentSlideId, TextBox QuestionTextBox, LinkLabel AttachFileName)
         {
             using (var ms = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(stringXML)))
             using (XmlTextReader xmlString = new XmlTextReader(ms))
             {
-                ReadFreeResponseXML(xmlString, CurentSlideId, QuestionTextBox);
+                ReadFreeResponseXML(xmlString, CurentSlideId, QuestionTextBox, AttachFileName);
             }
         }
 
-        public static void ReadFreeResponseXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox)
+        public static void ReadFreeResponseXML(XmlTextReader xmlTextReader, int CurentSlideId, TextBox QuestionTextBox, LinkLabel AttachFileName)
         {
             try
             {
@@ -625,6 +651,13 @@ namespace ALPRibbon
                         if (xmlTextReader.Name == "question")
                         {
                             QuestionTextBox.Text = xmlTextReader.GetAttribute("text");
+                        }
+                        if (xmlTextReader.Name == "attached_file")
+                        {
+                            AttachFileName.Tag = xmlTextReader.GetAttribute("pathname");
+                            AttachFileName.Text = Path.GetFileName((string)AttachFileName.Tag);
+                            if (AttachFileName.Text.Length == 0)
+                                AttachFileName.Text = "Click To Select";
                         }
                     }
                 }

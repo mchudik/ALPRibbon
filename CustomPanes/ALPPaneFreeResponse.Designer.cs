@@ -31,6 +31,8 @@
             this.QuestionLabel = new System.Windows.Forms.Label();
             this.QuestionTextBox = new System.Windows.Forms.TextBox();
             this.SubmitButton = new System.Windows.Forms.Button();
+            this.AttachFileName = new System.Windows.Forms.LinkLabel();
+            this.AttachFileLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // QuestionLabel
@@ -62,11 +64,35 @@
             this.SubmitButton.UseVisualStyleBackColor = true;
             this.SubmitButton.Click += new System.EventHandler(this.SubmitButton_Click);
             // 
+            // AttachFileName
+            // 
+            this.AttachFileName.AutoSize = true;
+            this.AttachFileName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AttachFileName.Location = new System.Drawing.Point(100, 85);
+            this.AttachFileName.Name = "AttachFileName";
+            this.AttachFileName.Size = new System.Drawing.Size(108, 18);
+            this.AttachFileName.TabIndex = 25;
+            this.AttachFileName.TabStop = true;
+            this.AttachFileName.Text = "Click To Select";
+            this.AttachFileName.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.AttachFileName_LinkClicked);
+            // 
+            // AttachFileLabel
+            // 
+            this.AttachFileLabel.AutoSize = true;
+            this.AttachFileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AttachFileLabel.Location = new System.Drawing.Point(21, 85);
+            this.AttachFileLabel.Name = "AttachFileLabel";
+            this.AttachFileLabel.Size = new System.Drawing.Size(76, 18);
+            this.AttachFileLabel.TabIndex = 24;
+            this.AttachFileLabel.Text = "Attach File";
+            // 
             // ALPPaneFreeResponse
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.Controls.Add(this.AttachFileName);
+            this.Controls.Add(this.AttachFileLabel);
             this.Controls.Add(this.SubmitButton);
             this.Controls.Add(this.QuestionTextBox);
             this.Controls.Add(this.QuestionLabel);
@@ -83,5 +109,7 @@
         private System.Windows.Forms.Label QuestionLabel;
         private System.Windows.Forms.TextBox QuestionTextBox;
         private System.Windows.Forms.Button SubmitButton;
+        private System.Windows.Forms.LinkLabel AttachFileName;
+        private System.Windows.Forms.Label AttachFileLabel;
     }
 }

@@ -126,18 +126,19 @@ namespace ALPRibbon
             QuestionTextBox.Width = PaddedWidth;
             ImagePictureBox.Width = PaddedWidth;
             JustificationTextBox.Width = PaddedWidth;
-            MarkSolutionButton.Width = PaddedWidth;
             SubmitButton.Width = PaddedWidth;
+            JustificationDescTextBox.Width = PaddedWidth;
 
             // Dynamic Height Calculation
-            ImagePictureBox.Height = this.Height - ImagePictureBox.Top - 214;
+            ImagePictureBox.Height = this.Height - ImagePictureBox.Top - 190;//214;
             if (ImagePictureBox.Height < 50) ImagePictureBox.Height = 50;
             int PaddedHeight = ImagePictureBox.Top + ImagePictureBox.Height;
-            MarkSolutionButton.Top = PaddedHeight + 10;
-            AddJustificationCheckBox.Top = PaddedHeight + 55;
-            JustificationDescTextBox.Top = PaddedHeight + 78;
-            JustificationTextBox.Top = PaddedHeight + 107;
-            SubmitButton.Top = PaddedHeight + 163;
+            AddJustificationCheckBox.Top = PaddedHeight + 7;
+            JustificationDescTextBox.Top = PaddedHeight + 30;
+            JustificationTextBox.Top = PaddedHeight + 59;
+            AttachFileLabel.Top = PaddedHeight + 110;
+            AttachFileName.Top = PaddedHeight + 110;
+            SubmitButton.Top = PaddedHeight + 139;
         }
 
         private void ResetVariables()
@@ -147,6 +148,7 @@ namespace ALPRibbon
             AddJustificationCheckBox.Checked = false;
             ImagePictureBox.Image = null;
             ImageNameLabel.Text = "Click To Select";
+            AttachFileName.Text = "Click To Select";
         }
 
         public void InitVariables()
@@ -166,7 +168,7 @@ namespace ALPRibbon
                     if (shape.AlternativeText.Equals("ImageQuizPollXML"))
                     {
                         SolutionRect = Rectangle.FromLTRB(0, 0, 0, 0);
-                        ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, ref SolutionRect, AddJustificationCheckBox, JustificationTextBox);
+                        ALPPowerpointUtils.ReadImageQuizXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, ref SolutionRect, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
                     }
                     if (shape.AlternativeText.Equals("ImageQuizPollImageMTD"))
                     {
@@ -255,7 +257,7 @@ namespace ALPRibbon
             try
             {
                 // Add XML Placeholder shape for this poll
-                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, SolutionRect, AddJustificationCheckBox, JustificationTextBox);
+                string textXML = ALPPowerpointUtils.WriteImageQuizXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, SolutionRect, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeTextXML = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRangeXML = oShapeTextXML.TextFrame.TextRange;
@@ -508,17 +510,23 @@ namespace ALPRibbon
             }
         }
 
-        private void MarkSolutionButton_Click(object sender, EventArgs e)
+        private void AttachFileName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             try
             {
-                bMarked = true;
-                ImagePictureBox.Invalidate(true);
+                OpenFileDialog openFileDlg = new OpenFileDialog();
+                openFileDlg.Filter = "All files (*.*)|*.*";
+                if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    AttachFileName.Tag = openFileDlg.FileName;
+                    AttachFileName.Text = Path.GetFileName(openFileDlg.FileName);
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
     }
 }

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 using ALPRibbon.Properties;
+using System.IO;
 using Tools = Microsoft.Office.Tools;
 
 namespace ALPRibbon
@@ -117,10 +118,11 @@ namespace ALPRibbon
             dataGridView.Height = this.Height - dataGridView.Top - 190;
             if (dataGridView.Height < 50) dataGridView.Height = 50;
             int PaddedHeight = dataGridView.Top + dataGridView.Height;
-            JustificationLabel.Top = PaddedHeight + 10;
-            AddJustificationCheckBox.Top = PaddedHeight + 31;
-            JustificationDescTextBox.Top = PaddedHeight + 54;
-            JustificationTextBox.Top = PaddedHeight + 83;
+            AddJustificationCheckBox.Top = PaddedHeight + 7;
+            JustificationDescTextBox.Top = PaddedHeight + 30;
+            JustificationTextBox.Top = PaddedHeight + 59;
+            AttachFileLabel.Top = PaddedHeight + 110;
+            AttachFileName.Top = PaddedHeight + 110;
             SubmitButton.Top = PaddedHeight + 139;
         }
 
@@ -129,7 +131,8 @@ namespace ALPRibbon
             QuestionTextBox.Text = "";
             JustificationTextBox.Text = "";
             AddJustificationCheckBox.Checked = false;
-            while(dataGridView.Rows.Count > 1)
+            AttachFileName.Text = "Click To Select";
+            while (dataGridView.Rows.Count > 1)
             {
                 dataGridView.Rows.RemoveAt(0);
             }
@@ -151,7 +154,7 @@ namespace ALPRibbon
                 {
                     if (shape.AlternativeText.Equals("MultipleChoicePollXML"))
                     {
-                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+                        ALPPowerpointUtils.ReadMultiQuestionXMLString(shape.TextFrame.TextRange.Text, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
                     }
                 }
             }
@@ -240,7 +243,7 @@ namespace ALPRibbon
             try
             {
                 // Add XML Placeholder shape for this poll
-                string textXML = ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox);
+                string textXML = ALPPowerpointUtils.WriteMultiQuestionXMLString(Globals.RibbonAddIn.Application.ActivePresentation, RibbonAddIn.ALPCurrentSlide, QuestionTextBox, dataGridView, AddJustificationCheckBox, JustificationTextBox, AttachFileName);
                 PowerPoint.Shapes oShapes = oSlide.Shapes;
                 PowerPoint.Shape oShapeTextXML = oShapes.AddTextbox(Microsoft.Office.Core.MsoTextOrientation.msoTextOrientationHorizontal, 100, 100, 500, 500);
                 PowerPoint.TextRange oTextRangeXML = oShapeTextXML.TextFrame.TextRange;
@@ -253,6 +256,24 @@ namespace ALPRibbon
                 if (Globals.RibbonAddIn.bDebug == false)
                     oShapeTextXML.Visible = Microsoft.Office.Core.MsoTriState.msoFalse;
                 oShapeTextXML.AlternativeText = "MultipleChoicePollXML";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString(), Resources.Critical_Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void AttachFileName_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDlg = new OpenFileDialog();
+                openFileDlg.Filter = "All files (*.*)|*.*";
+                if (openFileDlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    AttachFileName.Tag = openFileDlg.FileName;
+                    AttachFileName.Text = Path.GetFileName(openFileDlg.FileName);
+                }
             }
             catch (Exception ex)
             {
