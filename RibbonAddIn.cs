@@ -99,7 +99,8 @@ namespace ALPRibbon
 
         private void RibbonAddIn_Shutdown(object sender, System.EventArgs e)
         {
-            Directory.Delete(RibbonAddIn.WORKING_DIR, true);
+            if(Directory.Exists(RibbonAddIn.WORKING_DIR))
+                Directory.Delete(RibbonAddIn.WORKING_DIR, true);
         }
 
         // PowerPoint events
