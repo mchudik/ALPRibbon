@@ -72,7 +72,7 @@
             // SignInButton
             // 
             this.SignInButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.SignInButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.SignInButton.Image = global::ALPRibbon.Properties.Resources._1_Sign_In;
             this.SignInButton.Label = "Sign In";
             this.SignInButton.Name = "SignInButton";
             this.SignInButton.ScreenTip = "User Sign In";
@@ -92,7 +92,7 @@
             // UploadButton
             // 
             this.UploadButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.UploadButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.UploadButton.Image = global::ALPRibbon.Properties.Resources._2_Upload;
             this.UploadButton.Label = "Upload";
             this.UploadButton.Name = "UploadButton";
             this.UploadButton.ScreenTip = "Upload to Server";
@@ -104,7 +104,7 @@
             // PublishButton
             // 
             this.PublishButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.PublishButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.PublishButton.Image = global::ALPRibbon.Properties.Resources._3A_Publish;
             this.PublishButton.Label = "Publish";
             this.PublishButton.Name = "PublishButton";
             this.PublishButton.ScreenTip = "Publish to Server";
@@ -116,7 +116,7 @@
             // UpdateButton
             // 
             this.UpdateButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.UpdateButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.UpdateButton.Image = global::ALPRibbon.Properties.Resources._4_Update_Sync;
             this.UpdateButton.Label = "Update";
             this.UpdateButton.Name = "UpdateButton";
             this.UpdateButton.ScreenTip = "Update Server";
@@ -135,7 +135,7 @@
             // MultipleChoiceButton
             // 
             this.MultipleChoiceButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.MultipleChoiceButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.MultipleChoiceButton.Image = global::ALPRibbon.Properties.Resources._5_Multiple_Choice;
             this.MultipleChoiceButton.Label = "Multiple Choice";
             this.MultipleChoiceButton.Name = "MultipleChoiceButton";
             this.MultipleChoiceButton.ScreenTip = "Multiple Choice Question";
@@ -147,7 +147,7 @@
             // ImageQuizButton
             // 
             this.ImageQuizButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.ImageQuizButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.ImageQuizButton.Image = global::ALPRibbon.Properties.Resources._6_Image_Quiz;
             this.ImageQuizButton.Label = "Image Quiz";
             this.ImageQuizButton.Name = "ImageQuizButton";
             this.ImageQuizButton.ScreenTip = "Image Quiz Question";
@@ -159,7 +159,7 @@
             // FreeResponseButton
             // 
             this.FreeResponseButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.FreeResponseButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.FreeResponseButton.Image = global::ALPRibbon.Properties.Resources._7_Free_Response;
             this.FreeResponseButton.Label = "Free Response";
             this.FreeResponseButton.Name = "FreeResponseButton";
             this.FreeResponseButton.ScreenTip = "Free Response Question";
@@ -179,7 +179,7 @@
             // AnalyticsButton
             // 
             this.AnalyticsButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.AnalyticsButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.AnalyticsButton.Image = global::ALPRibbon.Properties.Resources._8_Analytics;
             this.AnalyticsButton.Label = "Analytics";
             this.AnalyticsButton.Name = "AnalyticsButton";
             this.AnalyticsButton.ShowImage = true;
@@ -187,7 +187,7 @@
             // HelpButton
             // 
             this.HelpButton.ControlSize = Microsoft.Office.Core.RibbonControlSize.RibbonControlSizeLarge;
-            this.HelpButton.Image = global::ALPRibbon.Properties.Resources.PlaceHolder;
+            this.HelpButton.Image = global::ALPRibbon.Properties.Resources._9_Help;
             this.HelpButton.Label = "Help";
             this.HelpButton.Name = "HelpButton";
             this.HelpButton.ShowImage = true;
